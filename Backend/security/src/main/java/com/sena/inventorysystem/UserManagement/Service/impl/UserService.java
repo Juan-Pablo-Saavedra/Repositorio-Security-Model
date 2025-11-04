@@ -1,16 +1,15 @@
-package com.sena.inventorysystem.UserManagement.Service;
+package com.sena.inventorysystem.UserManagement.Service.impl;
 
+import com.sena.inventorysystem.UserManagement.DTO.UserDto;
 import com.sena.inventorysystem.UserManagement.Entity.User;
 import com.sena.inventorysystem.UserManagement.Repository.UserRepository;
-import com.sena.inventorysystem.UserManagement.DTO.UserDto;
-import com.sena.inventorysystem.UserManagement.DTO.AuthRequest;
-import com.sena.inventorysystem.UserManagement.DTO.AuthResponse;
 import com.sena.inventorysystem.UserManagement.Service.interfaces.IUserService;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,62 +23,44 @@ public class UserService implements IUserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Override
     public UserDto create(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
-            throw new BusinessException("Usuario con username " + user.getUsername() + " ya existe");
+            throw new BusinessException("Usuario con nombre " + user.getUsername() + " ya existe");
         }
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new BusinessException("Usuario con email " + user.getEmail() + " ya existe");
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setCreatedBy("system");
         User savedUser = userRepository.save(user);
-
         return convertToDto(savedUser);
     }
 
-    public AuthResponse login(AuthRequest authRequest) {
-        User user = userRepository.findByUsername(authRequest.getUsername())
-                .orElseThrow(() -> new BusinessException("Usuario no encontrado"));
-
-        if (!passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
-            throw new BusinessException("Contraseña incorrecta");
-        }
-
-        return new AuthResponse(
-                "user-token-" + user.getId() + "-" + System.currentTimeMillis(),
-                "Bearer",
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName()
-        );
-    }
-
+    @Override
     public UserDto update(Long id, User user) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Usuario no encontrado con id: " + id));
 
         if (!existingUser.getUsername().equals(user.getUsername()) && userRepository.existsByUsername(user.getUsername())) {
-            throw new BusinessException("Usuario con username " + user.getUsername() + " ya existe");
+            throw new BusinessException("Usuario con nombre " + user.getUsername() + " ya existe");
         }
-
         if (!existingUser.getEmail().equals(user.getEmail()) && userRepository.existsByEmail(user.getEmail())) {
             throw new BusinessException("Usuario con email " + user.getEmail() + " ya existe");
         }
 
+        existingUser.setUsername(user.getUsername());
+        existingUser.setEmail(user.getEmail());
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
         existingUser.setPhone(user.getPhone());
         existingUser.setAddress(user.getAddress());
-        existingUser.setUpdatedBy("system");
 
         User updatedUser = userRepository.save(existingUser);
         return convertToDto(updatedUser);
     }
 
+    @Override
     public void delete(Long id) {
         if (!userRepository.existsById(id)) {
             throw new BusinessException("Usuario no encontrado con id: " + id);
@@ -87,6 +68,7 @@ public class UserService implements IUserService {
         userRepository.deleteById(id);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public UserDto findById(Long id) {
         User user = userRepository.findById(id)
@@ -94,6 +76,7 @@ public class UserService implements IUserService {
         return convertToDto(user);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<UserDto> findAll() {
         return userRepository.findAll().stream()
@@ -101,18 +84,32 @@ public class UserService implements IUserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public UserDto findByUsername(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new BusinessException("Usuario no encontrado con username: " + username));
+                .orElseThrow(() -> new BusinessException("Usuario no encontrado con nombre: " + username));
         return convertToDto(user);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public UserDto findByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException("Usuario no encontrado con email: " + email));
         return convertToDto(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     private UserDto convertToDto(User user) {
@@ -123,11 +120,7 @@ public class UserService implements IUserService {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getPhone(),
-                user.getAddress(),
-                user.getCreatedAt(),
-                user.getUpdatedAt(),
-                user.getCreatedBy(),
-                user.getUpdatedBy()
+                user.getAddress()
         );
     }
 }

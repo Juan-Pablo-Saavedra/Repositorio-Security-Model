@@ -1,7 +1,6 @@
 package com.sena.inventorysystem.ProductManagement.DTO;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 public class ProductDto {
 
@@ -10,25 +9,16 @@ public class ProductDto {
     private String description;
     private BigDecimal price;
     private String sku;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String createdBy;
-    private String updatedBy;
 
     // Constructors
     public ProductDto() {}
 
-    public ProductDto(Long id, String name, String description, BigDecimal price, String sku,
-                     LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy) {
+    public ProductDto(Long id, String name, String description, BigDecimal price, String sku) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.sku = sku;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.createdBy = createdBy;
-        this.updatedBy = updatedBy;
     }
 
     // Getters and Setters
@@ -46,16 +36,4 @@ public class ProductDto {
 
     public String getSku() { return sku; }
     public void setSku(String sku) { this.sku = sku; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
-
-    public String getCreatedBy() { return createdBy; }
-    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-
-    public String getUpdatedBy() { return updatedBy; }
-    public void setUpdatedBy(String updatedBy) { this.updatedBy = updatedBy; }
 }

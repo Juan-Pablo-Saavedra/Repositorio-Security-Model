@@ -1,6 +1,7 @@
 package com.sena.inventorysystem.OrderManagement.Factory;
 
 import com.sena.inventorysystem.OrderManagement.Entity.Client;
+import com.sena.inventorysystem.OrderManagement.DTO.ClientDto;
 
 public class ClientFactory {
 
@@ -13,9 +14,17 @@ public class ClientFactory {
         return client;
     }
 
-    public static Client createClientWithAudit(String name, String email, String phone, String address, String createdBy) {
-        Client client = createClient(name, email, phone, address);
-        client.setCreatedBy(createdBy);
-        return client;
+    public static Client createClientFromDto(ClientDto dto) {
+        return createClient(dto.getName(), dto.getEmail(), dto.getPhone(), dto.getAddress());
+    }
+
+    public static ClientDto createDtoFromClient(Client client) {
+        return new ClientDto(
+                client.getId(),
+                client.getName(),
+                client.getEmail(),
+                client.getPhone(),
+                client.getAddress()
+        );
     }
 }

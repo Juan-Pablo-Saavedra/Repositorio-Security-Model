@@ -1,10 +1,8 @@
-package com.sena.inventorysystem.OrderManagement.Service;
+package com.sena.inventorysystem.OrderManagement.Service.impl;
 
-import com.sena.inventorysystem.OrderManagement.Entity.Order;
-import com.sena.inventorysystem.OrderManagement.Entity.Client;
-import com.sena.inventorysystem.OrderManagement.Repository.OrderRepository;
-import com.sena.inventorysystem.OrderManagement.Repository.ClientRepository;
 import com.sena.inventorysystem.OrderManagement.DTO.OrderDto;
+import com.sena.inventorysystem.OrderManagement.Entity.Order;
+import com.sena.inventorysystem.OrderManagement.Repository.OrderRepository;
 import com.sena.inventorysystem.OrderManagement.Service.interfaces.IOrderService;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,73 +21,52 @@ public class OrderService implements IOrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    @Autowired
-    private ClientRepository clientRepository;
-
+    @Override
     public OrderDto create(Order order) {
-        // Validate client exists
-        if (order.getClient() == null || order.getClient().getId() == null) {
-            throw new BusinessException("Cliente es requerido para crear una orden");
-        }
-
-        Client client = clientRepository.findById(order.getClient().getId())
-                .orElseThrow(() -> new BusinessException("Cliente no encontrado"));
-
-        order.setClient(client);
-        order.setCreatedBy("system");
-
         Order savedOrder = orderRepository.save(order);
         return convertToDto(savedOrder);
     }
 
-    public List<OrderDto> getAll() {
-        return orderRepository.findAll().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
-    }
-
-    public OrderDto getById(Long id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Orden no encontrada"));
-        return convertToDto(order);
-    }
-
+    @Override
     public OrderDto update(Long id, Order order) {
         Order existingOrder = orderRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Orden no encontrada"));
+                .orElseThrow(() -> new BusinessException("Pedido no encontrado con id: " + id));
 
-        if (order.getClient() != null && order.getClient().getId() != null) {
-            Client client = clientRepository.findById(order.getClient().getId())
-                    .orElseThrow(() -> new BusinessException("Cliente no encontrado"));
-            existingOrder.setClient(client);
-        }
-
+        existingOrder.setClient(order.getClient());
+        existingOrder.setOrderDate(order.getOrderDate());
         existingOrder.setTotal(order.getTotal());
         existingOrder.setStatus(order.getStatus());
-        existingOrder.setUpdatedBy("system");
 
         Order updatedOrder = orderRepository.save(existingOrder);
         return convertToDto(updatedOrder);
     }
 
+    @Override
     public void delete(Long id) {
         if (!orderRepository.existsById(id)) {
-            throw new BusinessException("Orden no encontrada");
+            throw new BusinessException("Pedido no encontrado con id: " + id);
         }
         orderRepository.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public OrderDto findById(Long id) {
-        return getById(id);
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Pedido no encontrado con id: " + id));
+        return convertToDto(order);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderDto> findAll() {
-        return getAll();
+        return orderRepository.findAll().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderDto> findByClientId(Long clientId) {
         return orderRepository.findByClientId(clientId).stream()
                 .map(this::convertToDto)
@@ -97,22 +74,26 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<OrderDto> findByStatus(Order.OrderStatus status) {
-        return orderRepository.findByStatus(status).stream()
+    @Transactional(readOnly = true)
+    public List<OrderDto> findByStatus(String status) {
+        Order.OrderStatus orderStatus = Order.OrderStatus.valueOf(status.toUpperCase());
+        return orderRepository.findByStatus(orderStatus).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<OrderDto> findByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+    @Transactional(readOnly = true)
+    public List<OrderDto> findByOrderDateRange(LocalDateTime startDate, LocalDateTime endDate) {
         return orderRepository.findByOrderDateRange(startDate, endDate).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderDto> findByTotalRange(BigDecimal minTotal, BigDecimal maxTotal) {
-        return orderRepository.findByTotalRange(minTotal.doubleValue(), maxTotal.doubleValue()).stream()
+        return orderRepository.findByTotalRange(minTotal, maxTotal).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
@@ -124,11 +105,7 @@ public class OrderService implements IOrderService {
                 order.getClient().getName(),
                 order.getOrderDate(),
                 order.getTotal(),
-                order.getStatus().toString(),
-                order.getCreatedAt(),
-                order.getUpdatedAt(),
-                order.getCreatedBy(),
-                order.getUpdatedBy()
+                order.getStatus().toString()
         );
     }
 }

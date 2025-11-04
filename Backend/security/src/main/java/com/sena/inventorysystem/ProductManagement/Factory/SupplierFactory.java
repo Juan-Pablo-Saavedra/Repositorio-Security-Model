@@ -1,6 +1,7 @@
 package com.sena.inventorysystem.ProductManagement.Factory;
 
 import com.sena.inventorysystem.ProductManagement.Entity.Supplier;
+import com.sena.inventorysystem.ProductManagement.DTO.SupplierDto;
 
 public class SupplierFactory {
 
@@ -13,9 +14,17 @@ public class SupplierFactory {
         return supplier;
     }
 
-    public static Supplier createSupplierWithAudit(String name, String contactEmail, String contactPhone, String address, String createdBy) {
-        Supplier supplier = createSupplier(name, contactEmail, contactPhone, address);
-        supplier.setCreatedBy(createdBy);
-        return supplier;
+    public static Supplier createSupplierFromDto(SupplierDto dto) {
+        return createSupplier(dto.getName(), dto.getContactEmail(), dto.getContactPhone(), dto.getAddress());
+    }
+
+    public static SupplierDto createDtoFromSupplier(Supplier supplier) {
+        return new SupplierDto(
+                supplier.getId(),
+                supplier.getName(),
+                supplier.getContactEmail(),
+                supplier.getContactPhone(),
+                supplier.getAddress()
+        );
     }
 }

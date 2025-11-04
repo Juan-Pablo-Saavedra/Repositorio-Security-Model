@@ -1,6 +1,7 @@
 package com.sena.inventorysystem.ProductManagement.Factory;
 
 import com.sena.inventorysystem.ProductManagement.Entity.Category;
+import com.sena.inventorysystem.ProductManagement.DTO.CategoryDto;
 
 public class CategoryFactory {
 
@@ -11,9 +12,15 @@ public class CategoryFactory {
         return category;
     }
 
-    public static Category createCategoryWithAudit(String name, String description, String createdBy) {
-        Category category = createCategory(name, description);
-        category.setCreatedBy(createdBy);
-        return category;
+    public static Category createCategoryFromDto(CategoryDto dto) {
+        return createCategory(dto.getName(), dto.getDescription());
+    }
+
+    public static CategoryDto createDtoFromCategory(Category category) {
+        return new CategoryDto(
+                category.getId(),
+                category.getName(),
+                category.getDescription()
+        );
     }
 }

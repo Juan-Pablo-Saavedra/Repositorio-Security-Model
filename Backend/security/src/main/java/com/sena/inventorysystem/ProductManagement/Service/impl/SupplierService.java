@@ -1,8 +1,8 @@
-package com.sena.inventorysystem.ProductManagement.Service;
+package com.sena.inventorysystem.ProductManagement.Service.impl;
 
+import com.sena.inventorysystem.ProductManagement.DTO.SupplierDto;
 import com.sena.inventorysystem.ProductManagement.Entity.Supplier;
 import com.sena.inventorysystem.ProductManagement.Repository.SupplierRepository;
-import com.sena.inventorysystem.ProductManagement.DTO.SupplierDto;
 import com.sena.inventorysystem.ProductManagement.Service.interfaces.ISupplierService;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +19,16 @@ public class SupplierService implements ISupplierService {
     @Autowired
     private SupplierRepository supplierRepository;
 
+    @Override
     public SupplierDto create(Supplier supplier) {
         if (supplierRepository.existsByContactEmail(supplier.getContactEmail())) {
             throw new BusinessException("Proveedor con email " + supplier.getContactEmail() + " ya existe");
         }
-        supplier.setCreatedBy("system");
         Supplier savedSupplier = supplierRepository.save(supplier);
         return convertToDto(savedSupplier);
     }
 
+    @Override
     public SupplierDto update(Long id, Supplier supplier) {
         Supplier existingSupplier = supplierRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Proveedor no encontrado con id: " + id));
@@ -41,12 +42,12 @@ public class SupplierService implements ISupplierService {
         existingSupplier.setContactEmail(supplier.getContactEmail());
         existingSupplier.setContactPhone(supplier.getContactPhone());
         existingSupplier.setAddress(supplier.getAddress());
-        existingSupplier.setUpdatedBy("system");
 
         Supplier updatedSupplier = supplierRepository.save(existingSupplier);
         return convertToDto(updatedSupplier);
     }
 
+    @Override
     public void delete(Long id) {
         if (!supplierRepository.existsById(id)) {
             throw new BusinessException("Proveedor no encontrado con id: " + id);
@@ -54,6 +55,7 @@ public class SupplierService implements ISupplierService {
         supplierRepository.deleteById(id);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public SupplierDto findById(Long id) {
         Supplier supplier = supplierRepository.findById(id)
@@ -61,6 +63,7 @@ public class SupplierService implements ISupplierService {
         return convertToDto(supplier);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<SupplierDto> findAll() {
         return supplierRepository.findAll().stream()
@@ -68,6 +71,7 @@ public class SupplierService implements ISupplierService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public SupplierDto findByName(String name) {
         Supplier supplier = supplierRepository.findByName(name)
@@ -75,8 +79,9 @@ public class SupplierService implements ISupplierService {
         return convertToDto(supplier);
     }
 
+    @Override
     @Transactional(readOnly = true)
-    public List<SupplierDto> findByEmail(String email) {
+    public List<SupplierDto> findByContactEmail(String email) {
         return supplierRepository.findByContactEmail(email).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -88,11 +93,7 @@ public class SupplierService implements ISupplierService {
                 supplier.getName(),
                 supplier.getContactEmail(),
                 supplier.getContactPhone(),
-                supplier.getAddress(),
-                supplier.getCreatedAt(),
-                supplier.getUpdatedAt(),
-                supplier.getCreatedBy(),
-                supplier.getUpdatedBy()
+                supplier.getAddress()
         );
     }
 }

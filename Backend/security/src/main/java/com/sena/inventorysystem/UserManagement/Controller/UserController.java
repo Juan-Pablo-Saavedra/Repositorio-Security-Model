@@ -4,62 +4,134 @@ import com.sena.inventorysystem.UserManagement.DTO.AuthRequest;
 import com.sena.inventorysystem.UserManagement.DTO.AuthResponse;
 import com.sena.inventorysystem.UserManagement.DTO.UserDto;
 import com.sena.inventorysystem.UserManagement.Entity.User;
-import com.sena.inventorysystem.UserManagement.Service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.sena.inventorysystem.UserManagement.Service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "Gestión de Usuarios", description = "API para gestión de usuarios")
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private IUserService userService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    @Operation(summary = "Registrar usuario", description = "Registra un nuevo usuario en el sistema")
     public ResponseEntity<UserDto> register(@RequestBody User user) {
-        UserDto userDto = userService.create(user);
-        return ResponseEntity.ok(userDto);
+        try {
+            UserDto createdUser = userService.create(user);
+            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/login")
-    @Operation(summary = "Iniciar sesión", description = "Autentica un usuario y devuelve información de sesión")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
-        AuthResponse authResponse = userService.login(authRequest);
-        return ResponseEntity.ok(authResponse);
-    }
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    authRequest.getUsername(),
+                    authRequest.getPassword()
+                )
+            );
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Obtener usuario por ID", description = "Obtiene la información de un usuario específico")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-        UserDto userDto = userService.findById(id);
-        return ResponseEntity.ok(userDto);
-    }
-
-    @GetMapping
-    @Operation(summary = "Obtener todos los usuarios", description = "Obtiene la lista de todos los usuarios")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> userDtos = userService.findAll();
-        return ResponseEntity.ok(userDtos);
+            if (authentication.isAuthenticated()) {
+                return new ResponseEntity<>(new AuthResponse("token_placeholder", "Bearer", 1L, authRequest.getUsername(), "email@example.com", "First", "Last"), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(new AuthResponse(null, null, null, null, null, null, null), HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(new AuthResponse(null, null, null, null, null, null, null), HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Actualizar usuario", description = "Actualiza la información de un usuario")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody User user) {
-        UserDto userDto = userService.update(id, user);
-        return ResponseEntity.ok(userDto);
+    public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody User user) {
+        try {
+            UserDto updatedUser = userService.update(id, user);
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar usuario", description = "Elimina un usuario del sistema")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        try {
+            userService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> findById(@PathVariable Long id) {
+        try {
+            UserDto user = userService.findById(id);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserDto>> findAll() {
+        try {
+            List<UserDto> users = userService.findAll();
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/username/{username}")
+    public ResponseEntity<UserDto> findByUsername(@PathVariable String username) {
+        try {
+            UserDto user = userService.findByUsername(username);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserDto> findByEmail(@PathVariable String email) {
+        try {
+            UserDto user = userService.findByEmail(email);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/check-username/{username}")
+    public ResponseEntity<Boolean> existsByUsername(@PathVariable String username) {
+        try {
+            boolean exists = userService.existsByUsername(username);
+            return new ResponseEntity<>(exists, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/check-email/{email}")
+    public ResponseEntity<Boolean> existsByEmail(@PathVariable String email) {
+        try {
+            boolean exists = userService.existsByEmail(email);
+            return new ResponseEntity<>(exists, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

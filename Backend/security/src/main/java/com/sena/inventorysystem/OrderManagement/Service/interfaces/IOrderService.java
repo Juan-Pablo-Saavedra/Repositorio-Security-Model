@@ -21,9 +21,9 @@ public interface IOrderService {
 
     List<OrderDto> findByClientId(Long clientId);
 
-    List<OrderDto> findByStatus(Order.OrderStatus status);
+    List<OrderDto> findByStatus(String status);
 
-    List<OrderDto> findByDateRange(LocalDateTime startDate, LocalDateTime endDate);
+    List<OrderDto> findByOrderDateRange(LocalDateTime startDate, LocalDateTime endDate);
 
     List<OrderDto> findByTotalRange(BigDecimal minTotal, BigDecimal maxTotal);
 }

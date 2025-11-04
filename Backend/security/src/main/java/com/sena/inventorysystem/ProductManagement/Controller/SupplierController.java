@@ -1,11 +1,10 @@
 package com.sena.inventorysystem.ProductManagement.Controller;
 
-import com.sena.inventorysystem.ProductManagement.Entity.Supplier;
-import com.sena.inventorysystem.ProductManagement.Service.SupplierService;
 import com.sena.inventorysystem.ProductManagement.DTO.SupplierDto;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.sena.inventorysystem.ProductManagement.Entity.Supplier;
+import com.sena.inventorysystem.ProductManagement.Service.interfaces.ISupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,58 +12,78 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/suppliers")
-@Tag(name = "Gestión de Proveedores", description = "API para gestión de proveedores")
 public class SupplierController {
 
     @Autowired
-    private SupplierService supplierService;
+    private ISupplierService supplierService;
 
     @PostMapping
-    @Operation(summary = "Crear proveedor", description = "Crea un nuevo proveedor")
-    public ResponseEntity<SupplierDto> createSupplier(@RequestBody Supplier supplier) {
-        SupplierDto createdSupplier = supplierService.create(supplier);
-        return ResponseEntity.ok(createdSupplier);
-    }
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Obtener proveedor por ID", description = "Obtiene un proveedor específico por su ID")
-    public ResponseEntity<SupplierDto> getSupplierById(@PathVariable Long id) {
-        SupplierDto supplier = supplierService.findById(id);
-        return ResponseEntity.ok(supplier);
-    }
-
-    @GetMapping
-    @Operation(summary = "Obtener todos los proveedores", description = "Obtiene la lista de todos los proveedores")
-    public ResponseEntity<List<SupplierDto>> getAllSuppliers() {
-        List<SupplierDto> suppliers = supplierService.findAll();
-        return ResponseEntity.ok(suppliers);
-    }
-
-    @GetMapping("/name/{name}")
-    @Operation(summary = "Obtener proveedor por nombre", description = "Obtiene un proveedor por su nombre")
-    public ResponseEntity<SupplierDto> getSupplierByName(@PathVariable String name) {
-        SupplierDto supplier = supplierService.findByName(name);
-        return ResponseEntity.ok(supplier);
-    }
-
-    @GetMapping("/email/{email}")
-    @Operation(summary = "Buscar proveedores por email", description = "Busca proveedores que contengan el email especificado")
-    public ResponseEntity<List<SupplierDto>> searchSuppliersByEmail(@PathVariable String email) {
-        List<SupplierDto> suppliers = supplierService.findByEmail(email);
-        return ResponseEntity.ok(suppliers);
+    public ResponseEntity<SupplierDto> create(@RequestBody Supplier supplier) {
+        try {
+            SupplierDto createdSupplier = supplierService.create(supplier);
+            return new ResponseEntity<>(createdSupplier, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Actualizar proveedor", description = "Actualiza la información de un proveedor")
-    public ResponseEntity<SupplierDto> updateSupplier(@PathVariable Long id, @RequestBody Supplier supplier) {
-        SupplierDto updatedSupplier = supplierService.update(id, supplier);
-        return ResponseEntity.ok(updatedSupplier);
+    public ResponseEntity<SupplierDto> update(@PathVariable Long id, @RequestBody Supplier supplier) {
+        try {
+            SupplierDto updatedSupplier = supplierService.update(id, supplier);
+            return new ResponseEntity<>(updatedSupplier, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar proveedor", description = "Elimina un proveedor del sistema")
-    public ResponseEntity<Void> deleteSupplier(@PathVariable Long id) {
-        supplierService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        try {
+            supplierService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SupplierDto> findById(@PathVariable Long id) {
+        try {
+            SupplierDto supplier = supplierService.findById(id);
+            return new ResponseEntity<>(supplier, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<SupplierDto>> findAll() {
+        try {
+            List<SupplierDto> suppliers = supplierService.findAll();
+            return new ResponseEntity<>(suppliers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<SupplierDto> findByName(@PathVariable String name) {
+        try {
+            SupplierDto supplier = supplierService.findByName(name);
+            return new ResponseEntity<>(supplier, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<List<SupplierDto>> findByContactEmail(@PathVariable String email) {
+        try {
+            List<SupplierDto> suppliers = supplierService.findByContactEmail(email);
+            return new ResponseEntity<>(suppliers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

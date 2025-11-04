@@ -19,5 +19,5 @@ public interface ISupplierService {
 
     SupplierDto findByName(String name);
 
-    List<SupplierDto> findByEmail(String email);
+    List<SupplierDto> findByContactEmail(String email);
 }

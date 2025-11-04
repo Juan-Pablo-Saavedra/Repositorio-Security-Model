@@ -18,6 +18,4 @@ public interface IClientService {
     List<ClientDto> findAll();
 
     ClientDto findByEmail(String email);
-
-    List<ClientDto> findByName(String name);
 }

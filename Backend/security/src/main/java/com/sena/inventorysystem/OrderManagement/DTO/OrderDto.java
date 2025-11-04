@@ -11,26 +11,17 @@ public class OrderDto {
     private LocalDateTime orderDate;
     private BigDecimal total;
     private String status;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String createdBy;
-    private String updatedBy;
 
     // Constructors
     public OrderDto() {}
 
-    public OrderDto(Long id, Long clientId, String clientName, LocalDateTime orderDate, BigDecimal total,
-                   String status, LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy) {
+    public OrderDto(Long id, Long clientId, String clientName, LocalDateTime orderDate, BigDecimal total, String status) {
         this.id = id;
         this.clientId = clientId;
         this.clientName = clientName;
         this.orderDate = orderDate;
         this.total = total;
         this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.createdBy = createdBy;
-        this.updatedBy = updatedBy;
     }
 
     // Getters and Setters
@@ -51,16 +42,4 @@ public class OrderDto {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
-
-    public String getCreatedBy() { return createdBy; }
-    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-
-    public String getUpdatedBy() { return updatedBy; }
-    public void setUpdatedBy(String updatedBy) { this.updatedBy = updatedBy; }
 }

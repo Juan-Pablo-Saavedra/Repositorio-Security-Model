@@ -1,8 +1,8 @@
-package com.sena.inventorysystem.ProductManagement.Service;
+package com.sena.inventorysystem.ProductManagement.Service.impl;
 
+import com.sena.inventorysystem.ProductManagement.DTO.CategoryDto;
 import com.sena.inventorysystem.ProductManagement.Entity.Category;
 import com.sena.inventorysystem.ProductManagement.Repository.CategoryRepository;
-import com.sena.inventorysystem.ProductManagement.DTO.CategoryDto;
 import com.sena.inventorysystem.ProductManagement.Service.interfaces.ICategoryService;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +19,16 @@ public class CategoryService implements ICategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Override
     public CategoryDto create(Category category) {
         if (categoryRepository.existsByName(category.getName())) {
             throw new BusinessException("Categoría con nombre " + category.getName() + " ya existe");
         }
-        category.setCreatedBy("system");
         Category savedCategory = categoryRepository.save(category);
         return convertToDto(savedCategory);
     }
 
+    @Override
     public CategoryDto update(Long id, Category category) {
         Category existingCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Categoría no encontrada con id: " + id));
@@ -38,12 +39,12 @@ public class CategoryService implements ICategoryService {
 
         existingCategory.setName(category.getName());
         existingCategory.setDescription(category.getDescription());
-        existingCategory.setUpdatedBy("system");
 
         Category updatedCategory = categoryRepository.save(existingCategory);
         return convertToDto(updatedCategory);
     }
 
+    @Override
     public void delete(Long id) {
         if (!categoryRepository.existsById(id)) {
             throw new BusinessException("Categoría no encontrada con id: " + id);
@@ -51,6 +52,7 @@ public class CategoryService implements ICategoryService {
         categoryRepository.deleteById(id);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public CategoryDto findById(Long id) {
         Category category = categoryRepository.findById(id)
@@ -58,6 +60,7 @@ public class CategoryService implements ICategoryService {
         return convertToDto(category);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<CategoryDto> findAll() {
         return categoryRepository.findAll().stream()
@@ -65,6 +68,7 @@ public class CategoryService implements ICategoryService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public CategoryDto findByName(String name) {
         Category category = categoryRepository.findByName(name)
@@ -76,11 +80,7 @@ public class CategoryService implements ICategoryService {
         return new CategoryDto(
                 category.getId(),
                 category.getName(),
-                category.getDescription(),
-                category.getCreatedAt(),
-                category.getUpdatedAt(),
-                category.getCreatedBy(),
-                category.getUpdatedBy()
+                category.getDescription()
         );
     }
 }

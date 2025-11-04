@@ -1,7 +1,5 @@
 package com.sena.inventorysystem.ProductManagement.DTO;
 
-import java.time.LocalDateTime;
-
 public class SupplierDto {
 
     private Long id;
@@ -9,25 +7,16 @@ public class SupplierDto {
     private String contactEmail;
     private String contactPhone;
     private String address;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String createdBy;
-    private String updatedBy;
 
     // Constructors
     public SupplierDto() {}
 
-    public SupplierDto(Long id, String name, String contactEmail, String contactPhone, String address,
-                      LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy) {
+    public SupplierDto(Long id, String name, String contactEmail, String contactPhone, String address) {
         this.id = id;
         this.name = name;
         this.contactEmail = contactEmail;
         this.contactPhone = contactPhone;
         this.address = address;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.createdBy = createdBy;
-        this.updatedBy = updatedBy;
     }
 
     // Getters and Setters
@@ -45,16 +34,4 @@ public class SupplierDto {
 
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
-
-    public String getCreatedBy() { return createdBy; }
-    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-
-    public String getUpdatedBy() { return updatedBy; }
-    public void setUpdatedBy(String updatedBy) { this.updatedBy = updatedBy; }
 }

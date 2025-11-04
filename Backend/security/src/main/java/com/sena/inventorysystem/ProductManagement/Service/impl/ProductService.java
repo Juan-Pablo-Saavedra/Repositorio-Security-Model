@@ -1,8 +1,8 @@
-package com.sena.inventorysystem.ProductManagement.Service;
+package com.sena.inventorysystem.ProductManagement.Service.impl;
 
+import com.sena.inventorysystem.ProductManagement.DTO.ProductDto;
 import com.sena.inventorysystem.ProductManagement.Entity.Product;
 import com.sena.inventorysystem.ProductManagement.Repository.ProductRepository;
-import com.sena.inventorysystem.ProductManagement.DTO.ProductDto;
 import com.sena.inventorysystem.ProductManagement.Service.interfaces.IProductService;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +20,16 @@ public class ProductService implements IProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Override
     public ProductDto create(Product product) {
         if (productRepository.existsBySku(product.getSku())) {
             throw new BusinessException("Producto con SKU " + product.getSku() + " ya existe");
         }
-        product.setCreatedBy("system");
         Product savedProduct = productRepository.save(product);
         return convertToDto(savedProduct);
     }
 
+    @Override
     public ProductDto update(Long id, Product product) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Producto no encontrado con id: " + id));
@@ -41,12 +42,12 @@ public class ProductService implements IProductService {
         existingProduct.setDescription(product.getDescription());
         existingProduct.setPrice(product.getPrice());
         existingProduct.setSku(product.getSku());
-        existingProduct.setUpdatedBy("system");
 
         Product updatedProduct = productRepository.save(existingProduct);
         return convertToDto(updatedProduct);
     }
 
+    @Override
     public void delete(Long id) {
         if (!productRepository.existsById(id)) {
             throw new BusinessException("Producto no encontrado con id: " + id);
@@ -54,6 +55,7 @@ public class ProductService implements IProductService {
         productRepository.deleteById(id);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public ProductDto findById(Long id) {
         Product product = productRepository.findById(id)
@@ -61,6 +63,7 @@ public class ProductService implements IProductService {
         return convertToDto(product);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<ProductDto> findAll() {
         return productRepository.findAll().stream()
@@ -68,6 +71,7 @@ public class ProductService implements IProductService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public ProductDto findBySku(String sku) {
         Product product = productRepository.findBySku(sku)
@@ -75,6 +79,7 @@ public class ProductService implements IProductService {
         return convertToDto(product);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<ProductDto> findByName(String name) {
         return productRepository.findByNameContainingIgnoreCase(name).stream()
@@ -82,6 +87,7 @@ public class ProductService implements IProductService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<ProductDto> findByPriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
         return productRepository.findByPriceRange(minPrice.doubleValue(), maxPrice.doubleValue()).stream()
@@ -95,11 +101,7 @@ public class ProductService implements IProductService {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getSku(),
-                product.getCreatedAt(),
-                product.getUpdatedAt(),
-                product.getCreatedBy(),
-                product.getUpdatedBy()
+                product.getSku()
         );
     }
 }

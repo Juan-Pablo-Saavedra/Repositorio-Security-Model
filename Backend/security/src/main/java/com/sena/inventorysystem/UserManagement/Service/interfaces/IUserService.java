@@ -20,4 +20,8 @@ public interface IUserService {
     UserDto findByUsername(String username);
 
     UserDto findByEmail(String email);
+
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
 }
