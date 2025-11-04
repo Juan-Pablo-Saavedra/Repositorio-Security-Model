@@ -1,7 +1,5 @@
 package com.sena.inventorysystem.UserManagement.DTO;
 
-import java.time.LocalDateTime;
-
 public class UserDto {
 
     private Long id;

@@ -1,7 +1,6 @@
 package com.sena.inventorysystem.UserManagement.Entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user")
