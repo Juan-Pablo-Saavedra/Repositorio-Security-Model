@@ -16,7 +16,7 @@ public class DatabaseFactory {
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/inventory_db");
         dataSource.setUsername("root");
-        dataSource.setPassword("password");
+        dataSource.setPassword("");
         return dataSource;
     }
 
