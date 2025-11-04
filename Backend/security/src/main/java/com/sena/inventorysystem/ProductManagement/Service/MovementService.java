@@ -5,6 +5,7 @@ import com.sena.inventorysystem.ProductManagement.Entity.Stock;
 import com.sena.inventorysystem.ProductManagement.Repository.MovementRepository;
 import com.sena.inventorysystem.ProductManagement.Repository.StockRepository;
 import com.sena.inventorysystem.ProductManagement.DTO.MovementDto;
+import com.sena.inventorysystem.ProductManagement.Service.interfaces.IMovementService;
 import com.sena.inventorysystem.ProductManagement.Entity.Product;
 import com.sena.inventorysystem.ProductManagement.Repository.ProductRepository;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class MovementService {
+public class MovementService implements IMovementService {
 
     @Autowired
     private MovementRepository movementRepository;

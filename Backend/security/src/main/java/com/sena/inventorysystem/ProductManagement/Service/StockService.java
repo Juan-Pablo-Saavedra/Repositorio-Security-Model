@@ -3,6 +3,7 @@ package com.sena.inventorysystem.ProductManagement.Service;
 import com.sena.inventorysystem.ProductManagement.Entity.Stock;
 import com.sena.inventorysystem.ProductManagement.Repository.StockRepository;
 import com.sena.inventorysystem.ProductManagement.DTO.StockDto;
+import com.sena.inventorysystem.ProductManagement.Service.interfaces.IStockService;
 import com.sena.inventorysystem.ProductManagement.Entity.Product;
 import com.sena.inventorysystem.ProductManagement.Repository.ProductRepository;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class StockService {
+public class StockService implements IStockService {
 
     @Autowired
     private StockRepository stockRepository;

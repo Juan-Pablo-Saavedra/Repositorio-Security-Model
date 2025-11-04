@@ -3,6 +3,7 @@ package com.sena.inventorysystem.ProductManagement.Service;
 import com.sena.inventorysystem.ProductManagement.Entity.Supplier;
 import com.sena.inventorysystem.ProductManagement.Repository.SupplierRepository;
 import com.sena.inventorysystem.ProductManagement.DTO.SupplierDto;
+import com.sena.inventorysystem.ProductManagement.Service.interfaces.ISupplierService;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class SupplierService {
+public class SupplierService implements ISupplierService {
 
     @Autowired
     private SupplierRepository supplierRepository;

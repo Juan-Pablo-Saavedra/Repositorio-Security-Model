@@ -5,6 +5,7 @@ import com.sena.inventorysystem.UserManagement.Repository.UserRepository;
 import com.sena.inventorysystem.UserManagement.DTO.UserDto;
 import com.sena.inventorysystem.UserManagement.DTO.AuthRequest;
 import com.sena.inventorysystem.UserManagement.DTO.AuthResponse;
+import com.sena.inventorysystem.UserManagement.Service.interfaces.IUserService;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements IUserService {
 
     @Autowired
     private UserRepository userRepository;

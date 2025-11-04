@@ -1,0 +1,26 @@
+package com.sena.inventorysystem.ProductManagement.Service.interfaces;
+
+import com.sena.inventorysystem.ProductManagement.DTO.ProductDto;
+import com.sena.inventorysystem.ProductManagement.Entity.Product;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+public interface IProductService {
+
+    ProductDto create(Product product);
+
+    ProductDto update(Long id, Product product);
+
+    void delete(Long id);
+
+    ProductDto findById(Long id);
+
+    List<ProductDto> findAll();
+
+    ProductDto findBySku(String sku);
+
+    List<ProductDto> findByName(String name);
+
+    List<ProductDto> findByPriceRange(BigDecimal minPrice, BigDecimal maxPrice);
+}
