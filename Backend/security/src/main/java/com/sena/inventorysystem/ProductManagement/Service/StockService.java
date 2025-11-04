@@ -3,9 +3,9 @@ package com.sena.inventorysystem.ProductManagement.Service;
 import com.sena.inventorysystem.ProductManagement.Entity.Stock;
 import com.sena.inventorysystem.ProductManagement.Repository.StockRepository;
 import com.sena.inventorysystem.ProductManagement.DTO.StockDto;
-import com.sena.inventorysystem.ProductManagement.Service.interfaces.IStockService;
 import com.sena.inventorysystem.ProductManagement.Entity.Product;
 import com.sena.inventorysystem.ProductManagement.Repository.ProductRepository;
+import com.sena.inventorysystem.ProductManagement.Service.interfaces.IStockService;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,6 +79,13 @@ public class StockService implements IStockService {
     @Transactional(readOnly = true)
     public List<StockDto> findLowStock(Integer minQuantity) {
         return stockRepository.findByQuantityLessThan(minQuantity).stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<StockDto> findByLocation(String location) {
+        return stockRepository.findByLocation(location).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }

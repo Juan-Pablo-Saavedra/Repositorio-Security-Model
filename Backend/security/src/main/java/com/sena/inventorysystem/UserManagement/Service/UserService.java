@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +24,7 @@ public class UserService implements IUserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public AuthResponse register(User user) {
+    public UserDto create(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new BusinessException("Usuario con username " + user.getUsername() + " ya existe");
         }
@@ -38,15 +36,7 @@ public class UserService implements IUserService {
         user.setCreatedBy("system");
         User savedUser = userRepository.save(user);
 
-        return new AuthResponse(
-                "user-token-" + savedUser.getId() + "-" + System.currentTimeMillis(),
-                "Bearer",
-                savedUser.getId(),
-                savedUser.getUsername(),
-                savedUser.getEmail(),
-                savedUser.getFirstName(),
-                savedUser.getLastName()
-        );
+        return convertToDto(savedUser);
     }
 
     public AuthResponse login(AuthRequest authRequest) {

@@ -1,7 +1,5 @@
 package com.sena.inventorysystem.UserManagement.Service.interfaces;
 
-import com.sena.inventorysystem.UserManagement.DTO.AuthRequest;
-import com.sena.inventorysystem.UserManagement.DTO.AuthResponse;
 import com.sena.inventorysystem.UserManagement.DTO.UserDto;
 import com.sena.inventorysystem.UserManagement.Entity.User;
 
@@ -9,9 +7,7 @@ import java.util.List;
 
 public interface IUserService {
 
-    AuthResponse register(User user);
-
-    AuthResponse login(AuthRequest authRequest);
+    UserDto create(User user);
 
     UserDto update(Long id, User user);
 

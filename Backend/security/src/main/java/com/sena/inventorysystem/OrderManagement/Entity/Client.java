@@ -1,30 +1,27 @@
 package com.sena.inventorysystem.OrderManagement.Entity;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "`order`")
-public class Order {
+@Table(name = "client")
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    @Column(nullable = false, length = 200)
+    private String name;
 
-    @Column(name = "order_date")
-    private LocalDateTime orderDate;
+    @Column(length = 100, unique = true)
+    private String email;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal total;
+    @Column(length = 20)
+    private String phone;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private OrderStatus status = OrderStatus.PENDING;
+    @Column(columnDefinition = "TEXT")
+    private String address;
 
     // Audit fields
     @Column(name = "created_at")
@@ -39,34 +36,31 @@ public class Order {
     @Column(name = "updated_by", length = 50)
     private String updatedBy;
 
-    public enum OrderStatus {
-        PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED
-    }
-
     // Constructors
-    public Order() {}
+    public Client() {}
 
-    public Order(Client client, BigDecimal total) {
-        this.client = client;
-        this.total = total;
-        this.orderDate = LocalDateTime.now();
+    public Client(String name, String email, String phone, String address) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
     }
 
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Client getClient() { return client; }
-    public void setClient(Client client) { this.client = client; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public LocalDateTime getOrderDate() { return orderDate; }
-    public void setOrderDate(LocalDateTime orderDate) { this.orderDate = orderDate; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public BigDecimal getTotal() { return total; }
-    public void setTotal(BigDecimal total) { this.total = total; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
-    public OrderStatus getStatus() { return status; }
-    public void setStatus(OrderStatus status) { this.status = status; }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
@@ -85,9 +79,6 @@ public class Order {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
-        if (orderDate == null) {
-            orderDate = LocalDateTime.now();
-        }
     }
 
     @PreUpdate

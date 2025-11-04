@@ -5,9 +5,9 @@ import com.sena.inventorysystem.ProductManagement.Entity.Stock;
 import com.sena.inventorysystem.ProductManagement.Repository.MovementRepository;
 import com.sena.inventorysystem.ProductManagement.Repository.StockRepository;
 import com.sena.inventorysystem.ProductManagement.DTO.MovementDto;
-import com.sena.inventorysystem.ProductManagement.Service.interfaces.IMovementService;
 import com.sena.inventorysystem.ProductManagement.Entity.Product;
 import com.sena.inventorysystem.ProductManagement.Repository.ProductRepository;
+import com.sena.inventorysystem.ProductManagement.Service.interfaces.IMovementService;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -104,6 +104,26 @@ public class MovementService implements IMovementService {
         return movementRepository.findByType(type).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    public MovementDto update(Long id, Movement movement) {
+        Movement existingMovement = movementRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Movimiento no encontrado"));
+
+        existingMovement.setType(movement.getType());
+        existingMovement.setQuantity(movement.getQuantity());
+        existingMovement.setReason(movement.getReason());
+        existingMovement.setUpdatedBy("system");
+
+        Movement updatedMovement = movementRepository.save(existingMovement);
+        return convertToDto(updatedMovement);
+    }
+
+    public void delete(Long id) {
+        if (!movementRepository.existsById(id)) {
+            throw new BusinessException("Movimiento no encontrado");
+        }
+        movementRepository.deleteById(id);
     }
 
     private MovementDto convertToDto(Movement movement) {

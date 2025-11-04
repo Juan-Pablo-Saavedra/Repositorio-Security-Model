@@ -20,4 +20,6 @@ public interface IStockService {
     StockDto findByProductId(Long productId);
 
     List<StockDto> findLowStock(Integer minQuantity);
+
+    List<StockDto> findByLocation(String location);
 }

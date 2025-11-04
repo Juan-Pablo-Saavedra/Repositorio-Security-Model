@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,9 +23,9 @@ public class UserController {
 
     @PostMapping("/register")
     @Operation(summary = "Registrar usuario", description = "Registra un nuevo usuario en el sistema")
-    public ResponseEntity<AuthResponse> register(@RequestBody User user) {
-        AuthResponse authResponse = userService.register(user);
-        return ResponseEntity.ok(authResponse);
+    public ResponseEntity<UserDto> register(@RequestBody User user) {
+        UserDto userDto = userService.create(user);
+        return ResponseEntity.ok(userDto);
     }
 
     @PostMapping("/login")
@@ -62,21 +61,5 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private UserDto convertToDto(User user) {
-        return new UserDto(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getPhone(),
-                user.getAddress(),
-                user.getCreatedAt(),
-                user.getUpdatedAt(),
-                user.getCreatedBy(),
-                user.getUpdatedBy()
-        );
     }
 }
