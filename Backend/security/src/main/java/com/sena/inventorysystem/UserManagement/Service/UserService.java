@@ -1,9 +1,8 @@
-package com.sena.inventorysystem.UserManagement.Service.impl;
+package com.sena.inventorysystem.UserManagement.Service;
 
 import com.sena.inventorysystem.UserManagement.DTO.UserDto;
 import com.sena.inventorysystem.UserManagement.Entity.User;
 import com.sena.inventorysystem.UserManagement.Repository.UserRepository;
-import com.sena.inventorysystem.UserManagement.Service.interfaces.IUserService;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

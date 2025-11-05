@@ -2,7 +2,7 @@ package com.sena.inventorysystem.ProductManagement.Controller;
 
 import com.sena.inventorysystem.ProductManagement.DTO.SupplierDto;
 import com.sena.inventorysystem.ProductManagement.Entity.Supplier;
-import com.sena.inventorysystem.ProductManagement.Service.interfaces.ISupplierService;
+import com.sena.inventorysystem.ProductManagement.Service.ISupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

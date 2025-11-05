@@ -1,9 +1,8 @@
-package com.sena.inventorysystem.OrderManagement.Service.impl;
+package com.sena.inventorysystem.OrderManagement.Service;
 
 import com.sena.inventorysystem.OrderManagement.DTO.OrderDto;
 import com.sena.inventorysystem.OrderManagement.Entity.Order;
 import com.sena.inventorysystem.OrderManagement.Repository.OrderRepository;
-import com.sena.inventorysystem.OrderManagement.Service.interfaces.IOrderService;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

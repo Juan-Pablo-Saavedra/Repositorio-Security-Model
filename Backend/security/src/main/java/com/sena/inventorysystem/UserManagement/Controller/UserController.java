@@ -4,7 +4,9 @@ import com.sena.inventorysystem.UserManagement.DTO.AuthRequest;
 import com.sena.inventorysystem.UserManagement.DTO.AuthResponse;
 import com.sena.inventorysystem.UserManagement.DTO.UserDto;
 import com.sena.inventorysystem.UserManagement.Entity.User;
-import com.sena.inventorysystem.UserManagement.Service.interfaces.IUserService;
+import com.sena.inventorysystem.UserManagement.Service.IUserService;
+import com.sena.inventorysystem.UserManagement.Repository.UserRepository;
+import com.sena.inventorysystem.Infrastructure.config.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,12 @@ public class UserController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> register(@RequestBody User user) {
@@ -46,12 +54,27 @@ public class UserController {
             );
 
             if (authentication.isAuthenticated()) {
-                return new ResponseEntity<>(new AuthResponse("token_placeholder", "Bearer", 1L, authRequest.getUsername(), "email@example.com", "First", "Last"), HttpStatus.OK);
+                // Obtener información del usuario para el token
+                User user = userRepository.findByUsername(authRequest.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                String token = jwtUtil.generateToken(user.getUsername(), user.getId(), user.getEmail());
+
+                AuthResponse authResponse = new AuthResponse(
+                    token,
+                    "Bearer",
+                    user.getId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getFirstName(),
+                    user.getLastName()
+                );
+
+                return new ResponseEntity<>(authResponse, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(new AuthResponse(null, null, null, null, null, null, null), HttpStatus.UNAUTHORIZED);
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(new AuthResponse(null, null, null, null, null, null, null), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 

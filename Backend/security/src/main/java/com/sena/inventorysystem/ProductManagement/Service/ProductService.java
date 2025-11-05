@@ -1,9 +1,8 @@
-package com.sena.inventorysystem.ProductManagement.Service.impl;
+package com.sena.inventorysystem.ProductManagement.Service;
 
 import com.sena.inventorysystem.ProductManagement.DTO.ProductDto;
 import com.sena.inventorysystem.ProductManagement.Entity.Product;
 import com.sena.inventorysystem.ProductManagement.Repository.ProductRepository;
-import com.sena.inventorysystem.ProductManagement.Service.interfaces.IProductService;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

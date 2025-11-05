@@ -1,4 +1,4 @@
-package com.sena.inventorysystem.OrderManagement.Service.interfaces;
+package com.sena.inventorysystem.OrderManagement.Service;
 
 import com.sena.inventorysystem.OrderManagement.DTO.OrderDto;
 import com.sena.inventorysystem.OrderManagement.Entity.Order;

@@ -1,4 +1,4 @@
-package com.sena.inventorysystem.UserManagement.Service.interfaces;
+package com.sena.inventorysystem.UserManagement.Service;
 
 import com.sena.inventorysystem.UserManagement.DTO.UserDto;
 import com.sena.inventorysystem.UserManagement.Entity.User;

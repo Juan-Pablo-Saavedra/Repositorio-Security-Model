@@ -2,7 +2,8 @@ package com.sena.inventorysystem.OrderManagement.Controller;
 
 import com.sena.inventorysystem.OrderManagement.DTO.ClientDto;
 import com.sena.inventorysystem.OrderManagement.Entity.Client;
-import com.sena.inventorysystem.OrderManagement.Service.interfaces.IClientService;
+import com.sena.inventorysystem.OrderManagement.Service.IClientService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

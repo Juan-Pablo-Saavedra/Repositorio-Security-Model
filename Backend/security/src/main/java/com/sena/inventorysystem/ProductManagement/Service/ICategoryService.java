@@ -1,4 +1,4 @@
-package com.sena.inventorysystem.ProductManagement.Service.interfaces;
+package com.sena.inventorysystem.ProductManagement.Service;
 
 import com.sena.inventorysystem.ProductManagement.DTO.CategoryDto;
 import com.sena.inventorysystem.ProductManagement.Entity.Category;
