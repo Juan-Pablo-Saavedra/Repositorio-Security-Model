@@ -4,6 +4,8 @@ import com.sena.inventorysystem.ProductManagement.DTO.SupplierDto;
 import com.sena.inventorysystem.ProductManagement.Entity.Supplier;
 import com.sena.inventorysystem.ProductManagement.Repository.SupplierRepository;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
+import com.sena.inventorysystem.Infrastructure.exceptions.NotFoundException;
+import com.sena.inventorysystem.Infrastructure.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +32,11 @@ public class SupplierService implements ISupplierService {
     @Override
     public SupplierDto update(Long id, Supplier supplier) {
         Supplier existingSupplier = supplierRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Proveedor no encontrado con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Proveedor no encontrado con id: " + id));
 
         if (!existingSupplier.getContactEmail().equals(supplier.getContactEmail()) &&
             supplierRepository.existsByContactEmail(supplier.getContactEmail())) {
-            throw new BusinessException("Proveedor con email " + supplier.getContactEmail() + " ya existe");
+            throw new ValidationException("Proveedor con email " + supplier.getContactEmail() + " ya existe");
         }
 
         existingSupplier.setName(supplier.getName());
@@ -49,7 +51,7 @@ public class SupplierService implements ISupplierService {
     @Override
     public void delete(Long id) {
         if (!supplierRepository.existsById(id)) {
-            throw new BusinessException("Proveedor no encontrado con id: " + id);
+            throw new NotFoundException("Proveedor no encontrado con id: " + id);
         }
         supplierRepository.deleteById(id);
     }
@@ -58,7 +60,7 @@ public class SupplierService implements ISupplierService {
     @Transactional(readOnly = true)
     public SupplierDto findById(Long id) {
         Supplier supplier = supplierRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Proveedor no encontrado con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Proveedor no encontrado con id: " + id));
         return convertToDto(supplier);
     }
 
@@ -74,7 +76,7 @@ public class SupplierService implements ISupplierService {
     @Transactional(readOnly = true)
     public SupplierDto findByName(String name) {
         Supplier supplier = supplierRepository.findByName(name)
-                .orElseThrow(() -> new BusinessException("Proveedor no encontrado con nombre: " + name));
+                .orElseThrow(() -> new NotFoundException("Proveedor no encontrado con nombre: " + name));
         return convertToDto(supplier);
     }
 

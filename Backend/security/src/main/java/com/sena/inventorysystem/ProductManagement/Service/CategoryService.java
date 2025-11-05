@@ -4,6 +4,8 @@ import com.sena.inventorysystem.ProductManagement.DTO.CategoryDto;
 import com.sena.inventorysystem.ProductManagement.Entity.Category;
 import com.sena.inventorysystem.ProductManagement.Repository.CategoryRepository;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
+import com.sena.inventorysystem.Infrastructure.exceptions.NotFoundException;
+import com.sena.inventorysystem.Infrastructure.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,10 +32,10 @@ public class CategoryService implements ICategoryService {
     @Override
     public CategoryDto update(Long id, Category category) {
         Category existingCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Categoría no encontrada con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Categoría no encontrada con id: " + id));
 
         if (!existingCategory.getName().equals(category.getName()) && categoryRepository.existsByName(category.getName())) {
-            throw new BusinessException("Categoría con nombre " + category.getName() + " ya existe");
+            throw new ValidationException("Categoría con nombre " + category.getName() + " ya existe");
         }
 
         existingCategory.setName(category.getName());
@@ -46,7 +48,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public void delete(Long id) {
         if (!categoryRepository.existsById(id)) {
-            throw new BusinessException("Categoría no encontrada con id: " + id);
+            throw new NotFoundException("Categoría no encontrada con id: " + id);
         }
         categoryRepository.deleteById(id);
     }
@@ -55,7 +57,7 @@ public class CategoryService implements ICategoryService {
     @Transactional(readOnly = true)
     public CategoryDto findById(Long id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Categoría no encontrada con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Categoría no encontrada con id: " + id));
         return convertToDto(category);
     }
 
@@ -71,7 +73,7 @@ public class CategoryService implements ICategoryService {
     @Transactional(readOnly = true)
     public CategoryDto findByName(String name) {
         Category category = categoryRepository.findByName(name)
-                .orElseThrow(() -> new BusinessException("Categoría no encontrada con nombre: " + name));
+                .orElseThrow(() -> new NotFoundException("Categoría no encontrada con nombre: " + name));
         return convertToDto(category);
     }
 

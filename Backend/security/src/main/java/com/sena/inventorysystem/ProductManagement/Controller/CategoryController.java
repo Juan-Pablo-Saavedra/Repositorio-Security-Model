@@ -3,6 +3,7 @@ package com.sena.inventorysystem.ProductManagement.Controller;
 import com.sena.inventorysystem.ProductManagement.DTO.CategoryDto;
 import com.sena.inventorysystem.ProductManagement.Entity.Category;
 import com.sena.inventorysystem.ProductManagement.Service.ICategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,62 +19,38 @@ public class CategoryController {
     private ICategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<CategoryDto> create(@RequestBody Category category) {
-        try {
-            CategoryDto createdCategory = categoryService.create(category);
-            return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<CategoryDto> create(@Valid @RequestBody Category category) {
+        CategoryDto createdCategory = categoryService.create(category);
+        return new ResponseEntity<>(createdCategory, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDto> update(@PathVariable Long id, @RequestBody Category category) {
-        try {
-            CategoryDto updatedCategory = categoryService.update(id, category);
-            return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<CategoryDto> update(@PathVariable Long id, @Valid @RequestBody Category category) {
+        CategoryDto updatedCategory = categoryService.update(id, category);
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        try {
-            categoryService.delete(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        categoryService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDto> findById(@PathVariable Long id) {
-        try {
-            CategoryDto category = categoryService.findById(id);
-            return new ResponseEntity<>(category, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        CategoryDto category = categoryService.findById(id);
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<CategoryDto>> findAll() {
-        try {
-            List<CategoryDto> categories = categoryService.findAll();
-            return new ResponseEntity<>(categories, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<CategoryDto> categories = categoryService.findAll();
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<CategoryDto> findByName(@PathVariable String name) {
-        try {
-            CategoryDto category = categoryService.findByName(name);
-            return new ResponseEntity<>(category, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        CategoryDto category = categoryService.findByName(name);
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 }

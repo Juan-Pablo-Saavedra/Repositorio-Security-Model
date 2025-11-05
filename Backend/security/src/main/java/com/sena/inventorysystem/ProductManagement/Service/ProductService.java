@@ -4,6 +4,8 @@ import com.sena.inventorysystem.ProductManagement.DTO.ProductDto;
 import com.sena.inventorysystem.ProductManagement.Entity.Product;
 import com.sena.inventorysystem.ProductManagement.Repository.ProductRepository;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
+import com.sena.inventorysystem.Infrastructure.exceptions.NotFoundException;
+import com.sena.inventorysystem.Infrastructure.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,10 +33,10 @@ public class ProductService implements IProductService {
     @Override
     public ProductDto update(Long id, Product product) {
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Producto no encontrado con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Producto no encontrado con id: " + id));
 
         if (!existingProduct.getSku().equals(product.getSku()) && productRepository.existsBySku(product.getSku())) {
-            throw new BusinessException("Producto con SKU " + product.getSku() + " ya existe");
+            throw new ValidationException("Producto con SKU " + product.getSku() + " ya existe");
         }
 
         existingProduct.setName(product.getName());
@@ -49,7 +51,7 @@ public class ProductService implements IProductService {
     @Override
     public void delete(Long id) {
         if (!productRepository.existsById(id)) {
-            throw new BusinessException("Producto no encontrado con id: " + id);
+            throw new NotFoundException("Producto no encontrado con id: " + id);
         }
         productRepository.deleteById(id);
     }
@@ -58,7 +60,7 @@ public class ProductService implements IProductService {
     @Transactional(readOnly = true)
     public ProductDto findById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Producto no encontrado con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Producto no encontrado con id: " + id));
         return convertToDto(product);
     }
 
@@ -74,7 +76,7 @@ public class ProductService implements IProductService {
     @Transactional(readOnly = true)
     public ProductDto findBySku(String sku) {
         Product product = productRepository.findBySku(sku)
-                .orElseThrow(() -> new BusinessException("Producto no encontrado con SKU: " + sku));
+                .orElseThrow(() -> new NotFoundException("Producto no encontrado con SKU: " + sku));
         return convertToDto(product);
     }
 

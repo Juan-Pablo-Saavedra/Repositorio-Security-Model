@@ -4,6 +4,8 @@ import com.sena.inventorysystem.UserManagement.DTO.UserDto;
 import com.sena.inventorysystem.UserManagement.Entity.User;
 import com.sena.inventorysystem.UserManagement.Repository.UserRepository;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
+import com.sena.inventorysystem.Infrastructure.exceptions.NotFoundException;
+import com.sena.inventorysystem.Infrastructure.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,13 +41,13 @@ public class UserService implements IUserService {
     @Override
     public UserDto update(Long id, User user) {
         User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Usuario no encontrado con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado con id: " + id));
 
         if (!existingUser.getUsername().equals(user.getUsername()) && userRepository.existsByUsername(user.getUsername())) {
-            throw new BusinessException("Usuario con nombre " + user.getUsername() + " ya existe");
+            throw new ValidationException("Usuario con nombre " + user.getUsername() + " ya existe");
         }
         if (!existingUser.getEmail().equals(user.getEmail()) && userRepository.existsByEmail(user.getEmail())) {
-            throw new BusinessException("Usuario con email " + user.getEmail() + " ya existe");
+            throw new ValidationException("Usuario con email " + user.getEmail() + " ya existe");
         }
 
         existingUser.setUsername(user.getUsername());
@@ -62,7 +64,7 @@ public class UserService implements IUserService {
     @Override
     public void delete(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new BusinessException("Usuario no encontrado con id: " + id);
+            throw new NotFoundException("Usuario no encontrado con id: " + id);
         }
         userRepository.deleteById(id);
     }
@@ -71,7 +73,7 @@ public class UserService implements IUserService {
     @Transactional(readOnly = true)
     public UserDto findById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Usuario no encontrado con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado con id: " + id));
         return convertToDto(user);
     }
 
@@ -87,7 +89,7 @@ public class UserService implements IUserService {
     @Transactional(readOnly = true)
     public UserDto findByUsername(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new BusinessException("Usuario no encontrado con nombre: " + username));
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado con nombre: " + username));
         return convertToDto(user);
     }
 
@@ -95,7 +97,7 @@ public class UserService implements IUserService {
     @Transactional(readOnly = true)
     public UserDto findByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException("Usuario no encontrado con email: " + email));
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado con email: " + email));
         return convertToDto(user);
     }
 

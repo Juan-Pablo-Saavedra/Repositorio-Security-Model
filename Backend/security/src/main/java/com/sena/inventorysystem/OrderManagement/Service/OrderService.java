@@ -4,6 +4,7 @@ import com.sena.inventorysystem.OrderManagement.DTO.OrderDto;
 import com.sena.inventorysystem.OrderManagement.Entity.Order;
 import com.sena.inventorysystem.OrderManagement.Repository.OrderRepository;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
+import com.sena.inventorysystem.Infrastructure.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,7 @@ public class OrderService implements IOrderService {
     @Override
     public OrderDto update(Long id, Order order) {
         Order existingOrder = orderRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Pedido no encontrado con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Pedido no encontrado con id: " + id));
 
         existingOrder.setClient(order.getClient());
         existingOrder.setOrderDate(order.getOrderDate());
@@ -43,7 +44,7 @@ public class OrderService implements IOrderService {
     @Override
     public void delete(Long id) {
         if (!orderRepository.existsById(id)) {
-            throw new BusinessException("Pedido no encontrado con id: " + id);
+            throw new NotFoundException("Pedido no encontrado con id: " + id);
         }
         orderRepository.deleteById(id);
     }
@@ -52,7 +53,7 @@ public class OrderService implements IOrderService {
     @Transactional(readOnly = true)
     public OrderDto findById(Long id) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Pedido no encontrado con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Pedido no encontrado con id: " + id));
         return convertToDto(order);
     }
 

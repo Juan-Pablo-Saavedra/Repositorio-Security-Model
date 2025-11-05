@@ -3,6 +3,7 @@ package com.sena.inventorysystem.ProductManagement.Controller;
 import com.sena.inventorysystem.ProductManagement.DTO.SupplierDto;
 import com.sena.inventorysystem.ProductManagement.Entity.Supplier;
 import com.sena.inventorysystem.ProductManagement.Service.ISupplierService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,72 +19,44 @@ public class SupplierController {
     private ISupplierService supplierService;
 
     @PostMapping
-    public ResponseEntity<SupplierDto> create(@RequestBody Supplier supplier) {
-        try {
-            SupplierDto createdSupplier = supplierService.create(supplier);
-            return new ResponseEntity<>(createdSupplier, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<SupplierDto> create(@Valid @RequestBody Supplier supplier) {
+        SupplierDto createdSupplier = supplierService.create(supplier);
+        return new ResponseEntity<>(createdSupplier, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SupplierDto> update(@PathVariable Long id, @RequestBody Supplier supplier) {
-        try {
-            SupplierDto updatedSupplier = supplierService.update(id, supplier);
-            return new ResponseEntity<>(updatedSupplier, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<SupplierDto> update(@PathVariable Long id, @Valid @RequestBody Supplier supplier) {
+        SupplierDto updatedSupplier = supplierService.update(id, supplier);
+        return new ResponseEntity<>(updatedSupplier, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        try {
-            supplierService.delete(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        supplierService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<SupplierDto> findById(@PathVariable Long id) {
-        try {
-            SupplierDto supplier = supplierService.findById(id);
-            return new ResponseEntity<>(supplier, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        SupplierDto supplier = supplierService.findById(id);
+        return new ResponseEntity<>(supplier, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<SupplierDto>> findAll() {
-        try {
-            List<SupplierDto> suppliers = supplierService.findAll();
-            return new ResponseEntity<>(suppliers, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<SupplierDto> suppliers = supplierService.findAll();
+        return new ResponseEntity<>(suppliers, HttpStatus.OK);
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<SupplierDto> findByName(@PathVariable String name) {
-        try {
-            SupplierDto supplier = supplierService.findByName(name);
-            return new ResponseEntity<>(supplier, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        SupplierDto supplier = supplierService.findByName(name);
+        return new ResponseEntity<>(supplier, HttpStatus.OK);
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<List<SupplierDto>> findByContactEmail(@PathVariable String email) {
-        try {
-            List<SupplierDto> suppliers = supplierService.findByContactEmail(email);
-            return new ResponseEntity<>(suppliers, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        List<SupplierDto> suppliers = supplierService.findByContactEmail(email);
+        return new ResponseEntity<>(suppliers, HttpStatus.OK);
     }
 }

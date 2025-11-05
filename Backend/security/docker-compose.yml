@@ -1,19 +1,21 @@
+version: '3.8'
+
 services:
   mysql:
     image: mysql:8.0
-    container_name: inventory_mysql
+    container_name: library_mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: inventory_db
-      MYSQL_USER: inventory_user
-      MYSQL_PASSWORD: inventory_pass
+      MYSQL_DATABASE: library_db
+      MYSQL_USER: library_user
+      MYSQL_PASSWORD: library_pass
     ports:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - inventory_network
+      - library_network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
@@ -21,38 +23,36 @@ services:
 
   postgresql:
     image: postgres:15
-    container_name: inventory_postgresql
+    container_name: library_postgresql
     restart: always
     environment:
-      POSTGRES_DB: inventory_db
-      POSTGRES_USER: inventory_user
-      POSTGRES_PASSWORD: inventory_pass
+      POSTGRES_DB: library_db
+      POSTGRES_USER: library_user
+      POSTGRES_PASSWORD: library_pass
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgresql_data:/var/lib/postgresql/data
     networks:
-      - inventory_network
+      - library_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U inventory_user -d inventory_db"]
+      test: ["CMD-SHELL", "pg_isready -U library_user -d library_db"]
       timeout: 20s
       retries: 10
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: inventory_sqlserver
+    container_name: library_sqlserver
     restart: always
     environment:
       ACCEPT_EULA: Y
       MSSQL_SA_PASSWORD: StrongPassword123!
-      MSSQL_FORCE_ENCRYPTION: 0
-      MSSQL_PID: Express
     ports:
-      - "1433:1433"
+      - "1434:1433"
     volumes:
       - sqlserver_data:/var/opt/mssql
     networks:
-      - inventory_network
+      - library_network
     healthcheck:
       test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P StrongPassword123! -C -Q 'SELECT 1'"]
       timeout: 20s
@@ -64,5 +64,5 @@ volumes:
   sqlserver_data:
 
 networks:
-  inventory_network:
+  library_network:
     driver: bridge

@@ -4,6 +4,8 @@ import com.sena.inventorysystem.OrderManagement.DTO.ClientDto;
 import com.sena.inventorysystem.OrderManagement.Entity.Client;
 import com.sena.inventorysystem.OrderManagement.Repository.ClientRepository;
 import com.sena.inventorysystem.Infrastructure.exceptions.BusinessException;
+import com.sena.inventorysystem.Infrastructure.exceptions.NotFoundException;
+import com.sena.inventorysystem.Infrastructure.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,10 +32,10 @@ public class ClientService implements IClientService {
     @Override
     public ClientDto update(Long id, Client client) {
         Client existingClient = clientRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Cliente no encontrado con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Cliente no encontrado con id: " + id));
 
         if (!existingClient.getEmail().equals(client.getEmail()) && clientRepository.existsByEmail(client.getEmail())) {
-            throw new BusinessException("Cliente con email " + client.getEmail() + " ya existe");
+            throw new ValidationException("Cliente con email " + client.getEmail() + " ya existe");
         }
 
         existingClient.setName(client.getName());
@@ -48,7 +50,7 @@ public class ClientService implements IClientService {
     @Override
     public void delete(Long id) {
         if (!clientRepository.existsById(id)) {
-            throw new BusinessException("Cliente no encontrado con id: " + id);
+            throw new NotFoundException("Cliente no encontrado con id: " + id);
         }
         clientRepository.deleteById(id);
     }
@@ -57,7 +59,7 @@ public class ClientService implements IClientService {
     @Transactional(readOnly = true)
     public ClientDto findById(Long id) {
         Client client = clientRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Cliente no encontrado con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Cliente no encontrado con id: " + id));
         return convertToDto(client);
     }
 
@@ -73,7 +75,7 @@ public class ClientService implements IClientService {
     @Transactional(readOnly = true)
     public ClientDto findByEmail(String email) {
         Client client = clientRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException("Cliente no encontrado con email: " + email));
+                .orElseThrow(() -> new NotFoundException("Cliente no encontrado con email: " + email));
         return convertToDto(client);
     }
 
