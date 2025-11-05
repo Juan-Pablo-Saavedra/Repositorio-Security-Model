@@ -7,9 +7,9 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: library_db
-      MYSQL_USER: library_user
-      MYSQL_PASSWORD: library_pass
+      MYSQL_DATABASE: inventory_db
+      MYSQL_USER: inventory_user
+      MYSQL_PASSWORD: inventory_pass
     ports:
       - "3307:3306"
     volumes:
