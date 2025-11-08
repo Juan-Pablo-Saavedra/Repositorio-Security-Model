@@ -25,9 +25,9 @@ public class DatabaseFactory {
     public DataSource postgresqlDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/inventory_db");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("password");
+        dataSource.setUrl("jdbc:postgresql://localhost:5433/inventory_db");
+        dataSource.setUsername("inventory_user");
+        dataSource.setPassword("inventory_pass");
         return dataSource;
     }
 
@@ -36,9 +36,9 @@ public class DatabaseFactory {
     public DataSource sqlserverDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        dataSource.setUrl("jdbc:sqlserver://localhost:1433;databaseName=inventory_db");
+        dataSource.setUrl("jdbc:sqlserver://localhost:1434;databaseName=inventory_db;encrypt=false;trustServerCertificate=true");
         dataSource.setUsername("sa");
-        dataSource.setPassword("password");
+        dataSource.setPassword("StrongPassword123!");
         return dataSource;
     }
 }
