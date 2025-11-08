@@ -33,7 +33,7 @@ INSERT INTO products (name, description, price, sku, category_id) VALUES
 ('Samsung Galaxy S24', 'Smartphone Samsung Galaxy S24 256GB', 3800000.00, 'SGS24-256', 1),
 ('MacBook Air M3', 'Laptop Apple MacBook Air con chip M3', 8500000.00, 'MBA-M3-13', 1),
 ('Camisa Polo', 'Camisa polo algodón talla M', 75000.00, 'POLO-M-WHT', 2),
-('Jeans Levi\'s', 'Jeans Levi\'s 511 talla 32', 180000.00, 'LV511-32-BLU', 2),
+('Jeans Levi''s', 'Jeans Levi''s 511 talla 32', 180000.00, 'LV511-32-BLU', 2),
 ('Zapatillas Nike', 'Zapatillas deportivas Nike Air Max', 350000.00, 'NK-AM-42-BLK', 2),
 ('Sofá 3 plazas', 'Sofá de 3 plazas tela beige', 2500000.00, 'SOFA-3P-BGE', 3),
 ('Mesa comedor', 'Mesa de comedor para 6 personas', 1800000.00, 'MESA-COM-6P', 3),
