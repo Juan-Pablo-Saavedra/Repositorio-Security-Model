@@ -1,14 +1,40 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, Router } from '@angular/router';
+import { RouterOutlet, Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { AuthService } from './shared/services/auth.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { MatSidenav } from '@angular/material/sidenav';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDividerModule } from '@angular/material/divider';
+import { FormsModule } from '@angular/forms';
+import { Observable, Subject, combineLatest, map, shareReplay, filter, takeUntil } from 'rxjs';
+
+interface MenuItem {
+  id: string;
+  label: string;
+  icon: string;
+  route: string;
+  badge?: number;
+  children?: MenuItem[];
+}
+
+interface Notification {
+  id: number;
+  type: 'success' | 'warning' | 'error' | 'info';
+  message: string;
+  time: Date;
+}
+
+interface Breadcrumb {
+  label: string;
+  route?: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -16,163 +42,323 @@ import { MatSidenav } from '@angular/material/sidenav';
   imports: [
     CommonModule,
     RouterOutlet,
+    RouterLink,
+    FormsModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatBadgeModule,
+    MatTooltipModule,
+    MatDividerModule
   ],
-  template: `
-    <div class="app-container">
-      <mat-toolbar color="primary" *ngIf="isAuthenticated">
-        <button mat-icon-button (click)="toggleSidenav()">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <span class="app-title">Sistema de Inventarios</span>
-        <span class="spacer"></span>
-        <button mat-button [matMenuTriggerFor]="userMenu">
-          <mat-icon>account_circle</mat-icon>
-          {{ currentUser?.username }}
-        </button>
-        <mat-menu #userMenu="matMenu">
-          <button mat-menu-item (click)="logout()">
-            <mat-icon>exit_to_app</mat-icon>
-            Cerrar Sesión
-          </button>
-        </mat-menu>
-      </mat-toolbar>
-
-      <mat-sidenav-container class="sidenav-container" *ngIf="isAuthenticated">
-        <mat-sidenav #sidenav mode="side" [opened]="true">
-          <mat-nav-list>
-            <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
-              <mat-icon>dashboard</mat-icon>
-              <span>Dashboard</span>
-            </a>
-            <a mat-list-item routerLink="/inventory" routerLinkActive="active">
-              <mat-icon>inventory_2</mat-icon>
-              <span>Inventario</span>
-            </a>
-            <a mat-list-item routerLink="/products" routerLinkActive="active">
-              <mat-icon>category</mat-icon>
-              <span>Productos</span>
-            </a>
-            <a mat-list-item routerLink="/categories" routerLinkActive="active">
-              <mat-icon>label</mat-icon>
-              <span>Categorías</span>
-            </a>
-            <a mat-list-item routerLink="/suppliers" routerLinkActive="active">
-              <mat-icon>local_shipping</mat-icon>
-              <span>Proveedores</span>
-            </a>
-            <a mat-list-item routerLink="/orders" routerLinkActive="active">
-              <mat-icon>shopping_cart</mat-icon>
-              <span>Órdenes</span>
-            </a>
-          </mat-nav-list>
-        </mat-sidenav>
-
-        <mat-sidenav-content class="main-content">
-          <router-outlet></router-outlet>
-        </mat-sidenav-content>
-      </mat-sidenav-container>
-
-      <div *ngIf="!isAuthenticated" class="auth-container">
-        <router-outlet></router-outlet>
-      </div>
-    </div>
-  `,
-  styles: [`
-    .app-container {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .app-title {
-      font-size: 1.2em;
-      font-weight: 500;
-    }
-
-    .spacer {
-      flex: 1 1 auto;
-    }
-
-    .sidenav-container {
-      flex: 1;
-    }
-
-    .sidenav {
-      width: 250px;
-    }
-
-    .main-content {
-      padding: 20px;
-      background-color: #f5f5f5;
-    }
-
-    .auth-container {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    .active {
-      background-color: rgba(0, 0, 0, 0.1) !important;
-    }
-
-    mat-nav-list a {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    @media (max-width: 768px) {
-      .sidenav {
-        width: 200px;
-      }
-    }
-  `]
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-  title = 'Sistema de Inventarios';
+export class AppComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  
+  title = 'InventarioPro';
   isAuthenticated = false;
   currentUser: any = null;
+  isDarkTheme = false;
+  searchQuery = '';
+  notificationCount = 0;
+  
+  isCollapsed$: Observable<boolean>;
+  isHandset$: Observable<boolean>;
+
+  notifications: Notification[] = [
+    { 
+      id: 1, 
+      type: 'warning', 
+      message: 'Stock bajo: Producto XYZ tiene solo 5 unidades disponibles', 
+      time: new Date(Date.now() - 1000 * 60 * 15) // Hace 15 minutos
+    },
+    { 
+      id: 2, 
+      type: 'info', 
+      message: 'Nueva orden de compra #ORD-2024-001 recibida correctamente', 
+      time: new Date(Date.now() - 1000 * 60 * 30) // Hace 30 minutos
+    },
+    { 
+      id: 3, 
+      type: 'success', 
+      message: 'Inventario actualizado: Se agregaron 100 unidades de Producto ABC', 
+      time: new Date(Date.now() - 1000 * 60 * 60) // Hace 1 hora
+    },
+    { 
+      id: 4, 
+      type: 'error', 
+      message: 'Alerta: Producto DEF ha alcanzado el stock mínimo crítico', 
+      time: new Date(Date.now() - 1000 * 60 * 90) // Hace 1.5 horas
+    }
+  ];
+
+  breadcrumbs: Breadcrumb[] = [
+    { label: 'Dashboard', route: '/dashboard' }
+  ];
+
+  menuItems: MenuItem[] = [
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: 'dashboard',
+      route: '/dashboard'
+    },
+    {
+      id: 'inventory',
+      label: 'Inventario',
+      icon: 'inventory_2',
+      route: '/inventory',
+      badge: 5
+    },
+    {
+      id: 'products',
+      label: 'Productos',
+      icon: 'category',
+      route: '/products'
+    },
+    {
+      id: 'categories',
+      label: 'Categorías',
+      icon: 'label',
+      route: '/categories'
+    },
+    {
+      id: 'suppliers',
+      label: 'Proveedores',
+      icon: 'local_shipping',
+      route: '/suppliers'
+    },
+    {
+      id: 'orders',
+      label: 'Órdenes',
+      icon: 'shopping_cart',
+      route: '/orders',
+      badge: 12
+    }
+  ];
+
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   constructor(
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private breakpointObserver: BreakpointObserver
+  ) {
+    // Observables para responsive design
+    this.isHandset$ = this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.Tablet])
+      .pipe(
+        map(result => result.matches),
+        shareReplay(1)
+      );
 
-  ngOnInit() {
-    this.authService.isAuthenticated$.subscribe(
-      isAuth => {
-        this.isAuthenticated = isAuth;
-        if (!isAuth && this.router.url !== '/auth/login') {
-          this.router.navigate(['/auth/login']);
-        }
-      }
-    );
-
-    this.authService.currentUser$.subscribe(
-      user => {
-        this.currentUser = user;
-      }
-    );
+    this.isCollapsed$ = this.isHandset$;
   }
 
-  toggleSidenav() {
+  ngOnInit(): void {
+    this.initializeAuth();
+    this.initializeTheme();
+    this.initializeRouterEvents();
+    this.updateNotificationCount();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Inicializa la autenticación y redirige si es necesario
+   */
+  private initializeAuth(): void {
+    this.authService.isAuthenticated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(isAuth => {
+        this.isAuthenticated = isAuth;
+        if (!isAuth && !this.router.url.includes('/auth')) {
+          this.router.navigate(['/auth/login']);
+        }
+      });
+
+    this.authService.currentUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
+        this.currentUser = user;
+      });
+  }
+
+  /**
+   * Inicializa el tema desde localStorage
+   */
+  private initializeTheme(): void {
+    const savedTheme = localStorage.getItem('inventario_theme');
+    if (savedTheme) {
+      this.isDarkTheme = savedTheme === 'dark';
+    } else {
+      // Detectar preferencia del sistema
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      this.isDarkTheme = prefersDark;
+    }
+    this.applyTheme();
+  }
+
+  /**
+   * Inicializa eventos del router para actualizar breadcrumbs
+   */
+  private initializeRouterEvents(): void {
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: any) => {
+        this.updateBreadcrumbs(event.url);
+        // Cerrar sidebar en móvil después de navegar
+        this.isHandset$.pipe(takeUntil(this.destroy$)).subscribe(isHandset => {
+          if (isHandset && this.sidenav) {
+            this.sidenav.close();
+          }
+        });
+      });
+  }
+
+  /**
+   * Actualiza breadcrumbs basado en la URL actual
+   */
+  private updateBreadcrumbs(url: string): void {
+    const segments = url.split('/').filter(segment => segment);
+    this.breadcrumbs = [{ label: 'Dashboard', route: '/dashboard' }];
+
+    const routeMap: { [key: string]: string } = {
+      'inventory': 'Inventario',
+      'products': 'Productos',
+      'categories': 'Categorías',
+      'suppliers': 'Proveedores',
+      'orders': 'Órdenes',
+      'settings': 'Configuración',
+      'profile': 'Perfil'
+    };
+
+    segments.forEach((segment, index) => {
+      if (routeMap[segment]) {
+        const route = '/' + segments.slice(0, index + 1).join('/');
+        this.breadcrumbs.push({
+          label: routeMap[segment],
+          route: index < segments.length - 1 ? route : undefined
+        });
+      }
+    });
+  }
+
+  /**
+   * Actualiza el contador de notificaciones
+   */
+  private updateNotificationCount(): void {
+    this.notificationCount = this.notifications.length;
+  }
+
+  /**
+   * Toggle del sidebar
+   */
+  toggleSidebar(): void {
     if (this.sidenav) {
       this.sidenav.toggle();
     }
   }
 
-  logout() {
+  /**
+   * Toggle del tema claro/oscuro
+   */
+  toggleTheme(): void {
+    this.isDarkTheme = !this.isDarkTheme;
+    this.applyTheme();
+    localStorage.setItem('inventario_theme', this.isDarkTheme ? 'dark' : 'light');
+  }
+
+  /**
+   * Aplica el tema al documento
+   */
+  private applyTheme(): void {
+    const root = document.documentElement;
+    if (this.isDarkTheme) {
+      root.setAttribute('data-theme', 'dark');
+    } else {
+      root.removeAttribute('data-theme');
+    }
+  }
+
+  /**
+   * Realiza búsqueda de productos
+   */
+  performSearch(): void {
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/inventory'], { 
+        queryParams: { search: this.searchQuery.trim() } 
+      });
+      this.searchQuery = '';
+    }
+  }
+
+  /**
+   * Obtiene el icono apropiado para cada tipo de notificación
+   */
+  getNotificationIcon(type: string): string {
+    const icons: { [key: string]: string } = {
+      'success': 'check_circle',
+      'warning': 'warning',
+      'error': 'error',
+      'info': 'info'
+    };
+    return icons[type] || 'notifications';
+  }
+
+  /**
+   * Limpia todas las notificaciones
+   */
+  clearAllNotifications(): void {
+    this.notifications = [];
+    this.notificationCount = 0;
+  }
+
+  /**
+   * Elimina una notificación específica
+   */
+  removeNotification(id: number): void {
+    this.notifications = this.notifications.filter(n => n.id !== id);
+    this.updateNotificationCount();
+  }
+
+  /**
+   * Cierra sesión
+   */
+  logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
+  }
+
+  /**
+   * Maneja el redimensionamiento de la ventana
+   */
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    // El BreakpointObserver maneja esto automáticamente
+  }
+
+  /**
+   * Navega al perfil del usuario
+   */
+  navigateToProfile(): void {
+    this.router.navigate(['/profile']);
+  }
+
+  /**
+   * Navega a configuración
+   */
+  navigateToSettings(): void {
+    this.router.navigate(['/settings']);
   }
 }
