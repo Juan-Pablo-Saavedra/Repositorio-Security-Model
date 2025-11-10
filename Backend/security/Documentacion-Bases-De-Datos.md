@@ -8,7 +8,7 @@ Este documento explica cómo ejecutar y gestionar el Sistema de Inventario con s
 
 | Base de Datos | Puerto DB | Puerto App | Estado Migraciones | Datos | Estado Final |
 |---------------|-----------|------------|-------------------|--------|--------------|
-| **MySQL** | 3307 | 8081 | ✅ Completo | ✅ 53 registros | 🟢 **PRODUCCIÓN** |
+| **MySQL** | 3306 | 8081 | ✅ Completo | ✅ 53 registros | 🟢 **PRODUCCIÓN** |
 | **PostgreSQL** | 5433 | 8082 | ✅ Completo | ✅ 63 registros | 🟢 **PRODUCCIÓN** |
 | **SQL Server** | 1434 | 8083 | ✅ Completo | ✅ 8+ registros | 🟢 **FUNCIONAL** |
 
@@ -99,7 +99,7 @@ springdoc.show-actuator=true
 #### `application-mysql.properties`
 ```properties
 # MySQL Database Configuration
-spring.datasource.url=jdbc:mysql://localhost:3307/inventory_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useLegacyDatetimeCode=false&rewriteBatchedStatements=true&enabledTLSProtocols=TLSv1.2&allowPublicKeyRetrieval=true
+spring.datasource.url=jdbc:mysql://localhost:3306/inventory_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useLegacyDatetimeCode=false&rewriteBatchedStatements=true&enabledTLSProtocols=TLSv1.2&allowPublicKeyRetrieval=true
 spring.datasource.username=inventory_user
 spring.datasource.password=inventory_pass
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
@@ -110,7 +110,7 @@ server.port=8081
 # Flyway Configuration - MySQL specific
 spring.flyway.enabled=true
 spring.flyway.locations=classpath:db/migration/mysql
-spring.flyway.url=jdbc:mysql://localhost:3307/inventory_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useLegacyDatetimeCode=false&rewriteBatchedStatements=true&enabledTLSProtocols=TLSv1.2&allowPublicKeyRetrieval=true
+spring.flyway.url=jdbc:mysql://localhost:3306/inventory_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useLegacyDatetimeCode=false&rewriteBatchedStatements=true&enabledTLSProtocols=TLSv1.2&allowPublicKeyRetrieval=true
 spring.flyway.user=inventory_user
 spring.flyway.password=inventory_pass
 
