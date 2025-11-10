@@ -7,8 +7,8 @@ Este documento detalla todas las pruebas unitarias implementadas en el sistema d
 **Cobertura General:**
 - **Total de Controllers con pruebas**: 6/6 (100%)
 - **Total de Services con pruebas**: 8/8 (100%)
-- **Total de Infrastructure con pruebas**: 7/7 (100%)
-- **Total de archivos de test**: 23 archivos
+- **Total de Infrastructure con pruebas**: 6/6 (100%)
+- **Total de archivos de test**: 22 archivos
 
 ---
 
@@ -557,11 +557,6 @@ public class ServiceTest {
   - Verifica: Filtro extrae y valida token JWT
   - Output: Authentication establecido
 
-**SwaggerConfigTest.java** - 5+ pruebas
-- `testSwaggerConfig()`: Valida configuración de Swagger
-  - Verifica: Docket configurado con información de la API
-  - Output: Configuración de documentación
-
 **DatabaseFactoryTest.java** - 6+ pruebas
 - `testDatabaseFactory()`: Valida fábrica de bases de datos
   - Input: String de configuración de BD
@@ -667,7 +662,7 @@ mvnw.cmd test jacoco:report
 
 ## 🎓 Conclusiones
 
-El sistema de inventario cuenta con **100% de cobertura de pruebas unitarias** (21/21 componentes), con 23 archivos de prueba que cubren:
+El sistema de inventario cuenta con **100% de cobertura de pruebas unitarias** (21/21 componentes), con 22 archivos de prueba que cubren:
 
 1. **21/21 Componentes principales** con pruebas unitarias
 2. **Patrones CRUD completos** para todas las entidades
