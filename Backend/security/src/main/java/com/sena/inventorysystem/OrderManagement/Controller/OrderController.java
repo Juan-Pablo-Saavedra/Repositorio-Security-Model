@@ -47,8 +47,12 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateOrder(@PathVariable Long id, @Valid @RequestBody Order order) {
+    public ResponseEntity<?> updateOrder(@PathVariable Long id, @Valid @RequestBody OrderDto orderDto) {
         try {
+            Order order = new Order();
+            order.setTotal(orderDto.getTotal());
+            order.setStatus(Order.OrderStatus.valueOf(orderDto.getStatus()));
+
             OrderDto updatedOrder = orderService.update(id, order);
             return ResponseEntity.ok(new ApiResponse(true, "Pedido actualizado exitosamente", updatedOrder));
         } catch (Exception e) {

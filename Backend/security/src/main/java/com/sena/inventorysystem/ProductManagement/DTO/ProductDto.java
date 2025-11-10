@@ -12,15 +12,16 @@ public class ProductDto {
 
     @Schema(description = "Nombre del producto", example = "iPhone 15 Pro", required = true)
     @NotBlank(message = "El nombre del producto es obligatorio")
-    @Size(max = 255, message = "El nombre no debe exceder 255 caracteres")
+    @Size(min = 2, max = 200, message = "El nombre debe tener entre 2 y 200 caracteres")
     private String name;
 
     @Schema(description = "Descripción del producto", example = "Smartphone de última generación con chip A17", required = false)
+    @Size(max = 1000, message = "La descripción no debe exceder 1000 caracteres")
     private String description;
 
     @Schema(description = "Precio del producto", example = "999.99", required = true)
     @NotNull(message = "El precio es obligatorio")
-    @DecimalMin(value = "0.0", inclusive = false, message = "El precio debe ser mayor a cero")
+    @DecimalMin(value = "0.01", message = "El precio debe ser mayor a 0")
     private BigDecimal price;
 
     @Schema(description = "Código SKU único del producto", example = "IPH15PRO-128GB", required = true)

@@ -10,7 +10,7 @@ public class ClientDto {
 
     @Schema(description = "Nombre completo del cliente", example = "Juan Pérez", required = true)
     @NotBlank(message = "El nombre del cliente es obligatorio")
-    @Size(max = 200, message = "El nombre no debe exceder 200 caracteres")
+    @Size(min = 2, max = 200, message = "El nombre debe tener entre 2 y 200 caracteres")
     private String name;
 
     @Schema(description = "Correo electrónico del cliente", example = "juan.perez@example.com", required = false)
@@ -22,6 +22,7 @@ public class ClientDto {
     private String phone;
 
     @Schema(description = "Dirección del cliente", example = "Calle 123, Ciudad, País", required = false)
+    @Size(max = 500, message = "La dirección no debe exceder 500 caracteres")
     private String address;
 
     // Constructors

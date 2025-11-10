@@ -1,6 +1,8 @@
 package com.sena.inventorysystem.OrderManagement.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -14,16 +16,20 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", nullable = false)
+    @NotNull(message = "El cliente es obligatorio")
     private Client client;
 
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
     @Column(nullable = false, precision = 10, scale = 2)
+    @NotNull(message = "El total es obligatorio")
+    @DecimalMin(value = "0.01", message = "El total debe ser mayor a 0")
     private BigDecimal total;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NotNull(message = "El estado es obligatorio")
     private OrderStatus status = OrderStatus.PENDING;
 
     public enum OrderStatus {

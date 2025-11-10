@@ -10,7 +10,7 @@ public class SupplierDto {
 
     @Schema(description = "Nombre del proveedor", example = "TechCorp S.A.", required = true)
     @NotBlank(message = "El nombre del proveedor es obligatorio")
-    @Size(max = 100, message = "El nombre no debe exceder 100 caracteres")
+    @Size(min = 2, max = 200, message = "El nombre debe tener entre 2 y 200 caracteres")
     private String name;
 
     @Schema(description = "Correo electrónico de contacto del proveedor", example = "contacto@techcorp.com", required = true)
@@ -23,6 +23,7 @@ public class SupplierDto {
     private String contactPhone;
 
     @Schema(description = "Dirección del proveedor", example = "Av. Principal 123, Ciudad, País", required = false)
+    @Size(max = 500, message = "La dirección no debe exceder 500 caracteres")
     private String address;
 
     // Constructors

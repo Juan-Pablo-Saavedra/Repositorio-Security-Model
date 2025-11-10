@@ -21,7 +21,7 @@ public class OrderDto {
 
     @Schema(description = "Total de la orden", example = "150.50", required = true)
     @NotNull(message = "El total es obligatorio")
-    @DecimalMin(value = "0.0", inclusive = false, message = "El total debe ser mayor a cero")
+    @DecimalMin(value = "0.01", message = "El total debe ser mayor a 0")
     private BigDecimal total;
 
     @Schema(description = "Estado de la orden", example = "PENDING", allowableValues = {"PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"}, defaultValue = "PENDING")

@@ -9,10 +9,11 @@ public class CategoryDto {
 
     @Schema(description = "Nombre único de la categoría", example = "Electrónicos", required = true)
     @NotBlank(message = "El nombre de la categoría es obligatorio")
-    @Size(max = 100, message = "El nombre no debe exceder 100 caracteres")
+    @Size(min = 2, max = 100, message = "El nombre debe tener entre 2 y 100 caracteres")
     private String name;
 
     @Schema(description = "Descripción de la categoría", example = "Productos electrónicos y gadgets", required = false)
+    @Size(max = 500, message = "La descripción no debe exceder 500 caracteres")
     private String description;
 
     // Constructors

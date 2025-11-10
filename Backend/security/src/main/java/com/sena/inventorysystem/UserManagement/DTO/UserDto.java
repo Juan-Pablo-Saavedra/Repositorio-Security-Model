@@ -37,6 +37,7 @@ public class UserDto {
     private String phone;
 
     @Schema(description = "Dirección del usuario", example = "123 Main St, City, Country", required = false)
+    @Size(max = 500, message = "La dirección no debe exceder 500 caracteres")
     private String address;
 
     // Constructors

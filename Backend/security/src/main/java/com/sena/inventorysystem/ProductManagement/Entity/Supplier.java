@@ -1,6 +1,9 @@
 package com.sena.inventorysystem.ProductManagement.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "supplier")
@@ -11,15 +14,20 @@ public class Supplier {
     private Long id;
 
     @Column(nullable = false, length = 200)
+    @NotBlank(message = "El nombre del proveedor es obligatorio")
+    @Size(min = 2, max = 200, message = "El nombre debe tener entre 2 y 200 caracteres")
     private String name;
 
     @Column(name = "contact_email", length = 100)
+    @Email(message = "El email debe tener un formato válido")
     private String contactEmail;
 
     @Column(name = "contact_phone", length = 20)
+    @Size(max = 20, message = "El teléfono no debe exceder 20 caracteres")
     private String contactPhone;
 
     @Column(columnDefinition = "TEXT")
+    @Size(max = 500, message = "La dirección no debe exceder 500 caracteres")
     private String address;
 
     // Constructors

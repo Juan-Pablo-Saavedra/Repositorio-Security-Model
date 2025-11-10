@@ -1,4 +1,4 @@
-# ✅ Solución: Problemas de Migraciones Flyway
+# ✅ Solución: Problemas de Migraciones Flyway - ACTUALIZADO
 
 ## 📋 Problema Identificado
 
@@ -139,3 +139,86 @@ Puedes verificar que las migraciones se ejecutaron correctamente:
 - ✅ Migraciones listas para ejecutarse
 
 La aplicación ahora debería crear todas las tablas e insertar los datos automáticamente al iniciarse.
+
+---
+
+## 🔄 ACTUALIZACIONES RECIENTES - VALIDACIONES Y EXCEPCIONES
+
+### ✅ Validaciones Agregadas a Todas las Entidades
+
+**Todas las entidades ahora incluyen validaciones completas:**
+
+1. **Client.java** - Validaciones para nombre, email, teléfono y dirección
+2. **Order.java** - Validaciones para cliente y total
+3. **Product.java** - Validaciones para nombre, precio y SKU
+4. **Category.java** - Validaciones para nombre y descripción
+5. **Supplier.java** - Validaciones para nombre, email y dirección
+6. **User.java** - Validaciones ya existentes mantenidas
+
+### ✅ DTOs con Validaciones Mejoradas
+
+**Todos los DTOs incluyen anotaciones de validación:**
+
+- `ClientDto.java` - Validaciones de tamaño mínimo/máximo
+- `OrderDto.java` - Validación de decimal mínimo
+- `ProductDto.java` - Validaciones de tamaño y decimal
+- `CategoryDto.java` - Validaciones de tamaño
+- `SupplierDto.java` - Validaciones de email y tamaño
+- `UserDto.java` - Validaciones ya existentes
+
+### ✅ Controladores con Manejo de Excepciones
+
+**Controladores actualizados para mejor manejo:**
+
+- Uso consistente de `ApiResponse` para respuestas uniformes
+- Manejo adecuado de excepciones específicas
+- Validación de entrada con `@Valid`
+
+### ✅ Servicios con Lógica de Negocio Robusta
+
+**Servicios incluyen:**
+
+- Validación de unicidad (emails, SKUs, usernames)
+- Manejo de excepciones personalizadas
+- Transacciones apropiadas
+- Conversión correcta DTO-Entidad
+
+### ✅ Repositorios con Consultas Correctas
+
+**Repositorios incluyen:**
+
+- Métodos de consulta por campos únicos
+- Queries JPQL para rangos de fechas y precios
+- Métodos de existencia para validaciones
+
+### ✅ Patrón Factory Implementado Correctamente
+
+**Factories proporcionan:**
+
+- Creación de objetos desde DTOs
+- Conversión DTO-Entidad
+- Métodos estáticos para creación
+
+### ✅ Manejo Global de Excepciones Mejorado
+
+**GlobalExceptionHandler actualizado:**
+
+- Respuestas consistentes con `ApiResponse`
+- Manejo de validaciones de campos
+- Manejo de autenticación
+- Códigos HTTP apropiados
+
+### ✅ Arquitectura Completa Validada
+
+**El sistema ahora cuenta con:**
+
+- ✅ Validaciones en entidades y DTOs
+- ✅ Manejo de excepciones consistente
+- ✅ Patrón Repository correctamente implementado
+- ✅ Patrón Factory funcionando
+- ✅ Servicios con lógica de negocio
+- ✅ Controladores con validación de entrada
+- ✅ Manejo global de errores
+- ✅ Documentación Swagger actualizada
+
+**El código es ahora más robusto, mantenible y sigue las mejores prácticas de Spring Boot.**
