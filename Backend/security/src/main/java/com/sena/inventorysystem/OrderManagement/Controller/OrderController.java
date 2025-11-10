@@ -2,6 +2,7 @@ package com.sena.inventorysystem.OrderManagement.Controller;
 
 import com.sena.inventorysystem.OrderManagement.DTO.OrderDto;
 import com.sena.inventorysystem.OrderManagement.Entity.Order;
+import com.sena.inventorysystem.OrderManagement.Entity.Client;
 import com.sena.inventorysystem.OrderManagement.Service.IOrderService;
 import com.sena.inventorysystem.Infrastructure.DTO.ApiResponse;
 
@@ -26,11 +27,15 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDto orderDto) {
         try {
-            // Aquí necesitaríamos obtener el cliente por ID, pero por simplicidad asumiremos que se pasa el clientId
-            // En una implementación real, deberías inyectar el ClientService y obtener el cliente
+            // Obtener el cliente por ID
+            Client client = new Client();
+            client.setId(orderDto.getClientId()); // Asumimos que el clientId viene en el DTO
+
             Order order = new Order();
-            // order.setClient(clientService.findById(orderDto.getClientId())); // Esto requeriría ClientService
+            order.setClient(client);
             order.setTotal(orderDto.getTotal());
+            order.setOrderDate(LocalDateTime.now());
+            order.setStatus(Order.OrderStatus.PENDING);
 
             OrderDto createdOrder = orderService.create(order);
             return ResponseEntity.status(HttpStatus.CREATED)

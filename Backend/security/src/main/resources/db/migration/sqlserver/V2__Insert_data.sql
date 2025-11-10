@@ -1,56 +1,57 @@
 -- Insertar datos de ejemplo para el sistema de inventario - SQL Server Version
 -- Version: 2.0.0
 
--- Insertar categorías
+-- Insertar categorias
+GO
 INSERT INTO category (name, description) VALUES
-('Electrónicos', 'Productos electrónicos y dispositivos'),
-('Ropa', 'Ropa y accesorios'),
-('Hogar', 'Artículos para el hogar'),
-('Deportes', 'Equipos y accesorios deportivos'),
-('Libros', 'Libros y material educativo'),
-('Juguetes', 'Juguetes y entretenimiento'),
-('Automotriz', 'Accesorios para vehículos'),
-('Salud', 'Productos de salud y belleza'),
-('Oficina', 'Suministros de oficina'),
-('Jardín', 'Herramientas y artículos de jardín');
+('Tecnologia Digital', 'Dispositivos digitales y electronicos'),
+('Vestuario', 'Ropa, calzado y complementos'),
+('Decoracion del Hogar', 'Articulos de decoracion y hogar'),
+('Actividades Fisicas', 'Equipos y accesorios para deportes'),
+('Material Educativo', 'Libros y recursos de aprendizaje'),
+('Juegos y Ocio', 'Juguetes y entretenimiento infantil'),
+('Repuestos Automotrices', 'Accesorios y partes para automoviles'),
+('Cuidado Personal', 'Productos de belleza y cuidado personal'),
+('Equipos de Oficina', 'Suministros y mobiliario de oficina'),
+('Herramientas de Jardin', 'Herramientas y equipos de jardineria');
 
 -- Insertar proveedores
 INSERT INTO supplier (name, contact_email, contact_phone, address) VALUES
-('TechCorp', 'contact@techcorp.com', '+57 300 123 4567', 'Calle 123 #45-67, Bogotá'),
-('FashionPlus', 'ventas@fashionplus.com', '+57 301 234 5678', 'Carrera 89 #12-34, Medellín'),
-('HomeStyle', 'info@homestyle.com', '+57 302 345 6789', 'Avenida 45 #67-89, Cali'),
-('SportMax', 'ventas@sportmax.com', '+57 303 456 7890', 'Calle 78 #90-12, Barranquilla'),
-('BookWorld', 'contact@bookworld.com', '+57 304 567 8901', 'Carrera 56 #34-56, Cartagena'),
-('ToyLand', 'info@toyland.com', '+57 305 678 9012', 'Avenida 23 #45-67, Bucaramanga'),
-('AutoParts', 'ventas@autoparts.com', '+57 306 789 0123', 'Calle 90 #12-34, Pereira'),
-('HealthCare', 'contact@healthcare.com', '+57 307 890 1234', 'Carrera 34 #56-78, Manizales'),
-('OfficeSupplies', 'info@officesupplies.com', '+57 308 901 2345', 'Avenida 67 #89-01, Pasto'),
-('GardenTools', 'ventas@gardentools.com', '+57 309 012 3456', 'Calle 45 #23-45, Cúcuta');
+('DigitalTech', 'contact@digitaltech.com', '+57 330 123 4567', 'Calle 250 #55-75, Sincelejo'),
+('UrbanStyle', 'ventas@urbanstyle.com', '+57 331 234 5678', 'Carrera 130 #20-40, Valledupar'),
+('ModernHome', 'info@modernhome.com', '+57 332 345 6789', 'Avenida 95 #85-05, Monteria'),
+('ExtremeSports', 'ventas@extremesports.com', '+57 333 456 7890', 'Calle 160 #35-55, Quibdo'),
+('KnowledgeBooks', 'contact@knowledgebooks.com', '+57 334 567 8901', 'Carrera 75 #45-65, Arauca'),
+('FunToys', 'info@funtoys.com', '+57 335 678 9012', 'Avenida 40 #55-75, Leticia'),
+('VehicleParts', 'ventas@vehicleparts.com', '+57 336 789 0123', 'Calle 140 #20-40, Inirida'),
+('BeautyCare', 'contact@beautycare.com', '+57 337 890 1234', 'Carrera 55 #65-85, San Jose del Guaviare'),
+('BusinessOffice', 'info@businessoffice.com', '+57 338 901 2345', 'Avenida 105 #15-35, Mitu'),
+('EcoGarden', 'ventas@ecogarden.com', '+57 339 012 3456', 'Calle 85 #40-60, Puerto Carreño');
 
 -- Insertar productos
 INSERT INTO product (name, description, price, sku) VALUES
-('iPhone 15', 'Smartphone Apple iPhone 15 128GB', 4500000.00, 'IPH15-128'),
-('Samsung Galaxy S24', 'Smartphone Samsung Galaxy S24 256GB', 3800000.00, 'SGS24-256'),
-('MacBook Air M3', 'Laptop Apple MacBook Air con chip M3', 8500000.00, 'MBA-M3-13'),
-('Camisa Polo', 'Camisa polo algodón talla M', 75000.00, 'POLO-M-WHT'),
-('Jeans Levi\'s', 'Jeans Levi\'s 511 talla 32', 180000.00, 'LV511-32-BLU'),
-('Zapatillas Nike', 'Zapatillas deportivas Nike Air Max', 350000.00, 'NK-AM-42-BLK'),
-('Sofá 3 plazas', 'Sofá de 3 plazas tela beige', 2500000.00, 'SOFA-3P-BGE'),
-('Mesa comedor', 'Mesa de comedor para 6 personas', 1800000.00, 'MESA-COM-6P'),
-('Balón fútbol', 'Balón de fútbol profesional', 120000.00, 'BAL-FUT-PRO'),
-('Raqueta tennis', 'Raqueta de tenis Wilson Pro Staff', 450000.00, 'RQT-TEN-WPS'),
-('El Quijote', 'Novela de Miguel de Cervantes', 45000.00, 'LIB-QUIJOTE'),
-('Atlas Mundial', 'Atlas geográfico del mundo', 85000.00, 'ATL-MUNDO-2024'),
-('Muñeca Barbie', 'Muñeca Barbie clásica', 65000.00, 'BARBIE-CLASSIC'),
-('Lego Creator', 'Set de construcción Lego Creator 3-en-1', 280000.00, 'LEGO-CRE-3IN1'),
-('Aceite motor', 'Aceite sintético 5W-30 1L', 35000.00, 'ACE-MOT-5W30'),
-('Filtro aire', 'Filtro de aire para Toyota Corolla', 25000.00, 'FLT-AIR-TCOR'),
-('Crema hidratante', 'Crema hidratante facial 50ml', 45000.00, 'CRM-HID-FAC50'),
-('Vitamina C', 'Suplemento vitamina C 500mg', 25000.00, 'VIT-C-500MG'),
-('Cuaderno A4', 'Cuaderno rayado 100 hojas', 8000.00, 'CUAD-A4-100H'),
-('Bolígrafo BIC', 'Bolígrafo azul BIC cristal', 2000.00, 'BOL-BIC-AZUL'),
-('Tijeras podar', 'Tijeras de podar profesionales', 35000.00, 'TJR-POD-PROF'),
-('Manguera jardín', 'Manguera extensible 20m', 45000.00, 'MNG-JRD-20M');
+('Google Pixel 8', 'Smartphone Google Pixel 8 128GB', 4200000.00, 'GPX8-128'),
+('Xiaomi 14', 'Smartphone Xiaomi 14 256GB', 3600000.00, 'XMI14-256'),
+('Dell XPS 13', 'Laptop Dell XPS 13 con Intel i7', 7800000.00, 'DXPS13-I7'),
+('Camisa Tommy', 'Camisa polo Tommy Hilfiger talla S', 95000.00, 'TOM-S-RED'),
+('Jeans Calvin Klein', 'Jeans Calvin Klein slim talla 30', 220000.00, 'CK-30-GRY'),
+('Zapatillas Puma', 'Zapatillas deportivas Puma RS-X', 380000.00, 'PUM-RSX-41-BLK'),
+(' Sofa reclinable', ' Sofa reclinable individual cuero negro', 1800000.00, 'SOFA-REC-BLK'),
+('Mesa redonda', 'Mesa de comedor redonda para 4 personas', 1500000.00, 'MESA-RND-4P'),
+('Balon Wilson', 'Balon de futbol Wilson Evolution', 140000.00, 'BAL-WIL-EVO'),
+('Raqueta Babolat', 'Raqueta de tenis Babolat Boost Drive', 480000.00, 'RQT-BAB-BD'),
+('Don Quijote', 'Novela clasica de Cervantes', 50000.00, 'LIB-DONQUIJOTE'),
+('Atlas Historico', 'Atlas historico y geografico', 90000.00, 'ATL-HIST-2024'),
+('Muneca Disney', 'Muneca Disney Princesa edición limitada', 70000.00, 'DIS-PRINCESS'),
+('Lego Star Wars', 'Set de construccion Lego Star Wars X-Wing', 320000.00, 'LEGO-SW-XWING'),
+('Aceite Mobil', 'Aceite sintetico Mobil 1 5W-30 1L', 40000.00, 'ACE-MOB-5W30'),
+('Filtro Bosch', 'Filtro de aire Bosch para Volkswagen Golf', 30000.00, 'FLT-BOS-VWGOLF'),
+('Crema Loreal', 'Crema hidratante Loreal Paris 75ml', 50000.00, 'CRM-LOR-PAR75'),
+('Vitamina B12', 'Suplemento vitamina B12 1000mcg', 30000.00, 'VIT-B12-1000'),
+('Cuaderno Scribe', 'Cuaderno profesional 150 hojas', 10000.00, 'CUAD-SCR-150H'),
+('Pluma Parker', 'Pluma Parker Jotter azul', 35000.00, 'PLU-PAR-JOT'),
+('Tijeras Stanley', 'Tijeras de podar Stanley premium', 40000.00, 'TJR-STN-PREM'),
+('Manguera Karcher', 'Manguera extensible Karcher 30m', 60000.00, 'MNG-KAR-30M');
 
 -- Insertar relaciones producto-categoría
 INSERT INTO product_category (product_id, category_id) VALUES
@@ -69,16 +70,16 @@ INSERT INTO supplier_product (supplier_id, product_id, supply_price) VALUES
 
 -- Insertar clientes
 INSERT INTO clients (name, email, phone, address) VALUES
-('Juan Pérez', 'juan.perez@email.com', '+57 300 123 4567', 'Calle 123 #45-67, Bogotá'),
-('María García', 'maria.garcia@email.com', '+57 301 234 5678', 'Carrera 89 #12-34, Medellín'),
-('Carlos Rodríguez', 'carlos.rodriguez@email.com', '+57 302 345 6789', 'Avenida 45 #67-89, Cali'),
-('Ana Martínez', 'ana.martinez@email.com', '+57 303 456 7890', 'Calle 78 #90-12, Barranquilla'),
-('Luis Hernández', 'luis.hernandez@email.com', '+57 304 567 8901', 'Carrera 56 #34-56, Cartagena'),
-('Sofia López', 'sofia.lopez@email.com', '+57 305 678 9012', 'Avenida 23 #45-67, Bucaramanga'),
-('Diego González', 'diego.gonzalez@email.com', '+57 306 789 0123', 'Calle 90 #12-34, Pereira'),
-('Valentina Díaz', 'valentina.diaz@email.com', '+57 307 890 1234', 'Carrera 34 #56-78, Manizales'),
-('Andrés Torres', 'andres.torres@email.com', '+57 308 901 2345', 'Avenida 67 #89-01, Pasto'),
-('Camila Ramírez', 'camila.ramirez@email.com', '+57 309 012 3456', 'Calle 45 #23-45, Cúcuta');
+('Roberto Silva', 'roberto.silva@email.com', '+57 340 123 4567', 'Calle 280 #50-70, Santa Marta'),
+('Carmen Ortiz', 'carmen.ortiz@email.com', '+57 341 234 5678', 'Carrera 140 #30-50, Buenaventura'),
+('Fernando Alvarez', 'fernando.alvarez@email.com', '+57 342 345 6789', 'Avenida 115 #35-55, Tumaco'),
+('Patricia Reyes', 'patricia.reyes@email.com', '+57 343 456 7890', 'Calle 190 #40-60, Girardot'),
+('Ricardo Medina', 'ricardo.medina@email.com', '+57 344 567 8901', 'Carrera 95 #55-75, Fusagasuga'),
+('Monica Blanco', 'monica.blanco@email.com', '+57 345 678 9012', 'Avenida 65 #75-95, Zipaquira'),
+('Javier Pardo', 'javier.pardo@email.com', '+57 346 789 0123', 'Calle 240 #25-45, Facatativa'),
+('Natalia Suarez', 'natalia.suarez@email.com', '+57 347 890 1234', 'Carrera 75 #85-105, Chía'),
+('Emilio Vargas', 'emilio.vargas@email.com', '+57 348 901 2345', 'Avenida 135 #30-50, Soacha'),
+('Diana Montoya', 'diana.montoya@email.com', '+57 349 012 3456', 'Calle 95 #50-70, Mosquera');
 
 -- Insertar pedidos
 INSERT INTO orders (client_id, order_date, total, status) VALUES
@@ -96,14 +97,14 @@ INSERT INTO orders (client_id, order_date, total, status) VALUES
 -- Insertar usuarios (incluyendo johndoe con password123)
 INSERT INTO users (username, email, password, first_name, last_name, phone, address) VALUES
 ('admin', 'admin@inventory.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin', 'System', '+57 300 000 0000', 'System Address'),
-('johndoe', 'john.doe@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'John', 'Doe', '+57 310 123 4567', 'Calle 100 #20-30, Bogotá'),
-('juanp', 'juan.perez@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Juan', 'Pérez', '+57 300 123 4567', 'Calle 123 #45-67, Bogotá'),
-('mariag', 'maria.garcia@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'María', 'García', '+57 301 234 5678', 'Carrera 89 #12-34, Medellín'),
-('carlosr', 'carlos.rodriguez@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Carlos', 'Rodríguez', '+57 302 345 6789', 'Avenida 45 #67-89, Cali'),
-('anam', 'ana.martinez@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Ana', 'Martínez', '+57 303 456 7890', 'Calle 78 #90-12, Barranquilla'),
-('luish', 'luis.hernandez@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Luis', 'Hernández', '+57 304 567 8901', 'Carrera 56 #34-56, Cartagena'),
-('sofial', 'sofia.lopez@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Sofia', 'López', '+57 305 678 9012', 'Avenida 23 #45-67, Bucaramanga'),
-('diegog', 'diego.gonzalez@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Diego', 'González', '+57 306 789 0123', 'Calle 90 #12-34, Pereira'),
-('valentinad', 'valentina.diaz@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Valentina', 'Díaz', '+57 307 890 1234', 'Carrera 34 #56-78, Manizales'),
-('andrest', 'andres.torres@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Andrés', 'Torres', '+57 308 901 2345', 'Avenida 67 #89-01, Pasto'),
-('camilarm', 'camila.ramirez@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Camila', 'Ramírez', '+57 309 012 3456', 'Calle 45 #23-45, Cúcuta');
+
+('robertos', 'roberto.silva@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Roberto', 'Silva', '+57 340 123 4567', 'Calle 280 #50-70, Santa Marta'),
+('carmeno', 'carmen.ortiz@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Carmen', 'Ortiz', '+57 341 234 5678', 'Carrera 140 #30-50, Buenaventura'),
+('fernandoa', 'fernando.alvarez@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Fernando', 'Alvarez', '+57 342 345 6789', 'Avenida 115 #35-55, Tumaco'),
+('patriciar', 'patricia.reyes@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Patricia', 'Reyes', '+57 343 456 7890', 'Calle 190 #40-60, Girardot'),
+('ricardom', 'ricardo.medina@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Ricardo', 'Medina', '+57 344 567 8901', 'Carrera 95 #55-75, Fusagasuga'),
+('monicab', 'monica.blanco@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Monica', 'Blanco', '+57 345 678 9012', 'Avenida 65 #75-95, Zipaquira'),
+('javierp', 'javier.pardo@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Javier', 'Pardo', '+57 346 789 0123', 'Calle 240 #25-45, Facatativa'),
+('natalias', 'natalia.suarez@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Natalia', 'Suarez', '+57 347 890 1234', 'Carrera 75 #85-105, Chía'),
+('emiliov', 'emilio.vargas@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Emilio', 'Vargas', '+57 348 901 2345', 'Avenida 135 #30-50, Soacha'),
+('dianam', 'diana.montoya@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Diana', 'Montoya', '+57 349 012 3456', 'Calle 95 #50-70, Mosquera');

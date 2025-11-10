@@ -96,7 +96,7 @@ INSERT INTO orders (client_id, order_date, total, status) VALUES
 -- Insertar usuarios (incluyendo johndoe con password123)
 INSERT INTO users (username, email, password, first_name, last_name, phone, address) VALUES
 ('admin', 'admin@inventory.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin', 'System', '+57 300 000 0000', 'System Address'),
-('johndoe', 'john.doe@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'John', 'Doe', '+57 310 123 4567', 'Calle 100 #20-30, Bogotá'),
+
 ('juanp', 'juan.perez@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Juan', 'Pérez', '+57 300 123 4567', 'Calle 123 #45-67, Bogotá'),
 ('mariag', 'maria.garcia@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'María', 'García', '+57 301 234 5678', 'Carrera 89 #12-34, Medellín'),
 ('carlosr', 'carlos.rodriguez@email.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Carlos', 'Rodríguez', '+57 302 345 6789', 'Avenida 45 #67-89, Cali'),
