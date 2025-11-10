@@ -49,6 +49,36 @@ public class SupplierService implements ISupplierService {
     }
 
     @Override
+    public SupplierDto createSupplier(SupplierDto supplierDto) {
+        Supplier supplier = new Supplier();
+        supplier.setName(supplierDto.getName());
+        supplier.setContactEmail(supplierDto.getContactEmail());
+        supplier.setContactPhone(supplierDto.getContactPhone());
+        supplier.setAddress(supplierDto.getAddress());
+
+        return create(supplier);
+    }
+
+    @Override
+    public SupplierDto updateSupplier(Long id, SupplierDto supplierDto) {
+        Supplier existingSupplier = supplierRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Proveedor no encontrado con id: " + id));
+
+        if (!existingSupplier.getContactEmail().equals(supplierDto.getContactEmail()) &&
+            supplierRepository.existsByContactEmail(supplierDto.getContactEmail())) {
+            throw new ValidationException("Proveedor con email " + supplierDto.getContactEmail() + " ya existe");
+        }
+
+        existingSupplier.setName(supplierDto.getName());
+        existingSupplier.setContactEmail(supplierDto.getContactEmail());
+        existingSupplier.setContactPhone(supplierDto.getContactPhone());
+        existingSupplier.setAddress(supplierDto.getAddress());
+
+        Supplier updatedSupplier = supplierRepository.save(existingSupplier);
+        return convertToDto(updatedSupplier);
+    }
+
+    @Override
     public void delete(Long id) {
         if (!supplierRepository.existsById(id)) {
             throw new NotFoundException("Proveedor no encontrado con id: " + id);
@@ -90,7 +120,6 @@ public class SupplierService implements ISupplierService {
 
     private SupplierDto convertToDto(Supplier supplier) {
         return new SupplierDto(
-                supplier.getId(),
                 supplier.getName(),
                 supplier.getContactEmail(),
                 supplier.getContactPhone(),

@@ -1,13 +1,29 @@
 package com.sena.inventorysystem.UserManagement.DTO;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Respuesta de autenticación")
 public class AuthResponse {
 
+    @Schema(description = "Token JWT de autenticación", example = "eyJhbGciOiJIUzI1NiJ9...")
     private String token;
+
+    @Schema(description = "Tipo de token", example = "Bearer")
     private String type = "Bearer";
+
+    @Schema(description = "ID del usuario", example = "1")
     private Long id;
+
+    @Schema(description = "Nombre de usuario", example = "johndoe")
     private String username;
+
+    @Schema(description = "Correo electrónico del usuario", example = "john@example.com")
     private String email;
+
+    @Schema(description = "Nombre del usuario", example = "John")
     private String firstName;
+
+    @Schema(description = "Apellido del usuario", example = "Doe")
     private String lastName;
 
     // Constructors

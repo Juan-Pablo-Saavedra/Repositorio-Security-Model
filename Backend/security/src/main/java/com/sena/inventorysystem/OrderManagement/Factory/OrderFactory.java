@@ -21,7 +21,6 @@ public class OrderFactory {
 
     public static OrderDto createDtoFromOrder(Order order) {
         return new OrderDto(
-                order.getId(),
                 order.getClient().getId(),
                 order.getClient().getName(),
                 order.getOrderDate(),

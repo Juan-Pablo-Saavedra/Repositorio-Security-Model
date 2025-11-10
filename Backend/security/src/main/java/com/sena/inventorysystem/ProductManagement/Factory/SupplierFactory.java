@@ -20,7 +20,6 @@ public class SupplierFactory {
 
     public static SupplierDto createDtoFromSupplier(Supplier supplier) {
         return new SupplierDto(
-                supplier.getId(),
                 supplier.getName(),
                 supplier.getContactEmail(),
                 supplier.getContactPhone(),

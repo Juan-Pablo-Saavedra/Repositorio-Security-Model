@@ -20,7 +20,6 @@ public class ClientFactory {
 
     public static ClientDto createDtoFromClient(Client client) {
         return new ClientDto(
-                client.getId(),
                 client.getName(),
                 client.getEmail(),
                 client.getPhone(),

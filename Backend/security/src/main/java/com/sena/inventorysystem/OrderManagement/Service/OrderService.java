@@ -99,7 +99,6 @@ public class OrderService implements IOrderService {
 
     private OrderDto convertToDto(Order order) {
         return new OrderDto(
-                order.getId(),
                 order.getClient().getId(),
                 order.getClient().getName(),
                 order.getOrderDate(),

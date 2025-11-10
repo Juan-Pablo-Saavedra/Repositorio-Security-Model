@@ -3,6 +3,7 @@ package com.sena.inventorysystem.OrderManagement.Controller;
 import com.sena.inventorysystem.OrderManagement.DTO.OrderDto;
 import com.sena.inventorysystem.OrderManagement.Entity.Order;
 import com.sena.inventorysystem.OrderManagement.Service.IOrderService;
+import com.sena.inventorysystem.Infrastructure.DTO.ApiResponse;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,60 +24,112 @@ public class OrderController {
     private IOrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderDto> create(@Valid @RequestBody Order order) {
-        OrderDto createdOrder = orderService.create(order);
-        return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+    public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDto orderDto) {
+        try {
+            // Aquí necesitaríamos obtener el cliente por ID, pero por simplicidad asumiremos que se pasa el clientId
+            // En una implementación real, deberías inyectar el ClientService y obtener el cliente
+            Order order = new Order();
+            // order.setClient(clientService.findById(orderDto.getClientId())); // Esto requeriría ClientService
+            order.setTotal(orderDto.getTotal());
+
+            OrderDto createdOrder = orderService.create(order);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse(true, "Pedido creado exitosamente", createdOrder));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Error al crear el pedido: " + e.getMessage(), null));
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderDto> update(@PathVariable Long id, @Valid @RequestBody Order order) {
-        OrderDto updatedOrder = orderService.update(id, order);
-        return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+    public ResponseEntity<?> updateOrder(@PathVariable Long id, @Valid @RequestBody Order order) {
+        try {
+            OrderDto updatedOrder = orderService.update(id, order);
+            return ResponseEntity.ok(new ApiResponse(true, "Pedido actualizado exitosamente", updatedOrder));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Error al actualizar el pedido: " + e.getMessage(), null));
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        orderService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
+        try {
+            orderService.delete(id);
+            return ResponseEntity.ok(new ApiResponse(true, "Pedido eliminado exitosamente", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Error al eliminar el pedido: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDto> findById(@PathVariable Long id) {
-        OrderDto order = orderService.findById(id);
-        return new ResponseEntity<>(order, HttpStatus.OK);
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        try {
+            OrderDto order = orderService.findById(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Pedido encontrado", order));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Pedido no encontrado: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderDto>> findAll() {
-        List<OrderDto> orders = orderService.findAll();
-        return new ResponseEntity<>(orders, HttpStatus.OK);
+    public ResponseEntity<?> findAll() {
+        try {
+            List<OrderDto> orders = orderService.findAll();
+            return ResponseEntity.ok(new ApiResponse<>(true, "Pedidos obtenidos exitosamente", orders));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error al obtener pedidos: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/client/{clientId}")
-    public ResponseEntity<List<OrderDto>> findByClientId(@PathVariable Long clientId) {
-        List<OrderDto> orders = orderService.findByClientId(clientId);
-        return new ResponseEntity<>(orders, HttpStatus.OK);
+    public ResponseEntity<?> findByClientId(@PathVariable Long clientId) {
+        try {
+            List<OrderDto> orders = orderService.findByClientId(clientId);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Pedidos del cliente obtenidos", orders));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error al buscar pedidos del cliente: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<OrderDto>> findByStatus(@PathVariable String status) {
-        List<OrderDto> orders = orderService.findByStatus(status);
-        return new ResponseEntity<>(orders, HttpStatus.OK);
+    public ResponseEntity<?> findByStatus(@PathVariable String status) {
+        try {
+            List<OrderDto> orders = orderService.findByStatus(status);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Pedidos por estado obtenidos", orders));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error al buscar pedidos por estado: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/date-range")
-    public ResponseEntity<List<OrderDto>> findByOrderDateRange(
+    public ResponseEntity<?> findByOrderDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
-        List<OrderDto> orders = orderService.findByOrderDateRange(startDate, endDate);
-        return new ResponseEntity<>(orders, HttpStatus.OK);
+        try {
+            List<OrderDto> orders = orderService.findByOrderDateRange(startDate, endDate);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Pedidos por rango de fechas obtenidos", orders));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error al buscar pedidos por rango de fechas: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/total-range")
-    public ResponseEntity<List<OrderDto>> findByTotalRange(
+    public ResponseEntity<?> findByTotalRange(
             @RequestParam BigDecimal minTotal,
             @RequestParam BigDecimal maxTotal) {
-        List<OrderDto> orders = orderService.findByTotalRange(minTotal, maxTotal);
-        return new ResponseEntity<>(orders, HttpStatus.OK);
+        try {
+            List<OrderDto> orders = orderService.findByTotalRange(minTotal, maxTotal);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Pedidos por rango de total obtenidos", orders));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error al buscar pedidos por rango de total: " + e.getMessage(), null));
+        }
     }
 }

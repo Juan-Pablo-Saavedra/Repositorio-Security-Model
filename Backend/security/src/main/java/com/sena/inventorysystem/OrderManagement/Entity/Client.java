@@ -3,7 +3,7 @@ package com.sena.inventorysystem.OrderManagement.Entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "client")
+@Table(name = "clients")
 public class Client {
 
     @Id

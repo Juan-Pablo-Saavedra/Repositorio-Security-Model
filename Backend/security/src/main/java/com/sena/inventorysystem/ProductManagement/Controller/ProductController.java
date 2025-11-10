@@ -1,8 +1,8 @@
 package com.sena.inventorysystem.ProductManagement.Controller;
 
 import com.sena.inventorysystem.ProductManagement.DTO.ProductDto;
-import com.sena.inventorysystem.ProductManagement.Entity.Product;
 import com.sena.inventorysystem.ProductManagement.Service.IProductService;
+import com.sena.inventorysystem.Infrastructure.DTO.ApiResponse;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,52 +21,97 @@ public class ProductController {
     private IProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductDto> create(@Valid @RequestBody Product product) {
-        ProductDto createdProduct = productService.create(product);
-        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDto productDto) {
+        try {
+            ProductDto createdProduct = productService.createProduct(productDto);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse(true, "Producto creado exitosamente", createdProduct));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Error al crear el producto: " + e.getMessage(), null));
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> update(@PathVariable Long id, @Valid @RequestBody Product product) {
-        ProductDto updatedProduct = productService.update(id, product);
-        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDto productDto) {
+        try {
+            ProductDto updatedProduct = productService.updateProduct(id, productDto);
+            if(updatedProduct == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ApiResponse(false, "Producto no encontrado con ID: " + id, null));
+            }
+            return ResponseEntity.ok(new ApiResponse(true, "Producto actualizado exitosamente", updatedProduct));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Error al actualizar el producto: " + e.getMessage(), null));
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        productService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        try {
+            productService.delete(id);
+            return ResponseEntity.ok(new ApiResponse(true, "Producto eliminado exitosamente", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Error al eliminar el producto: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> findById(@PathVariable Long id) {
-        ProductDto product = productService.findById(id);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        try {
+            ProductDto product = productService.findById(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Producto encontrado", product));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Producto no encontrado: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> findAll() {
-        List<ProductDto> products = productService.findAll();
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public ResponseEntity<?> findAll() {
+        try {
+            List<ProductDto> products = productService.findAll();
+            return ResponseEntity.ok(new ApiResponse<>(true, "Productos obtenidos exitosamente", products));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error al obtener productos: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/sku/{sku}")
-    public ResponseEntity<ProductDto> findBySku(@PathVariable String sku) {
-        ProductDto product = productService.findBySku(sku);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+    public ResponseEntity<?> findBySku(@PathVariable String sku) {
+        try {
+            ProductDto product = productService.findBySku(sku);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Producto encontrado", product));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Producto no encontrado: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ProductDto>> findByName(@RequestParam String name) {
-        List<ProductDto> products = productService.findByName(name);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public ResponseEntity<?> findByName(@RequestParam String name) {
+        try {
+            List<ProductDto> products = productService.findByName(name);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Productos encontrados", products));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error al buscar productos: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/price-range")
-    public ResponseEntity<List<ProductDto>> findByPriceRange(
+    public ResponseEntity<?> findByPriceRange(
             @RequestParam BigDecimal minPrice,
             @RequestParam BigDecimal maxPrice) {
-        List<ProductDto> products = productService.findByPriceRange(minPrice, maxPrice);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        try {
+            List<ProductDto> products = productService.findByPriceRange(minPrice, maxPrice);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Productos encontrados en el rango de precios", products));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error al buscar productos por rango de precios: " + e.getMessage(), null));
+        }
     }
 }

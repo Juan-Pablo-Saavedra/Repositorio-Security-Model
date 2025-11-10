@@ -18,7 +18,6 @@ public class CategoryFactory {
 
     public static CategoryDto createDtoFromCategory(Category category) {
         return new CategoryDto(
-                category.getId(),
                 category.getName(),
                 category.getDescription()
         );

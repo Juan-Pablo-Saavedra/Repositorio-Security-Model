@@ -81,7 +81,6 @@ public class ClientService implements IClientService {
 
     private ClientDto convertToDto(Client client) {
         return new ClientDto(
-                client.getId(),
                 client.getName(),
                 client.getEmail(),
                 client.getPhone(),

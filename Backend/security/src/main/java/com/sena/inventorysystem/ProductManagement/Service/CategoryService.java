@@ -46,6 +46,31 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    public CategoryDto createCategory(CategoryDto categoryDto) {
+        Category category = new Category();
+        category.setName(categoryDto.getName());
+        category.setDescription(categoryDto.getDescription());
+
+        return create(category);
+    }
+
+    @Override
+    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
+        Category existingCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Categoría no encontrada con id: " + id));
+
+        if (!existingCategory.getName().equals(categoryDto.getName()) && categoryRepository.existsByName(categoryDto.getName())) {
+            throw new ValidationException("Categoría con nombre " + categoryDto.getName() + " ya existe");
+        }
+
+        existingCategory.setName(categoryDto.getName());
+        existingCategory.setDescription(categoryDto.getDescription());
+
+        Category updatedCategory = categoryRepository.save(existingCategory);
+        return convertToDto(updatedCategory);
+    }
+
+    @Override
     public void delete(Long id) {
         if (!categoryRepository.existsById(id)) {
             throw new NotFoundException("Categoría no encontrada con id: " + id);
@@ -79,7 +104,6 @@ public class CategoryService implements ICategoryService {
 
     private CategoryDto convertToDto(Category category) {
         return new CategoryDto(
-                category.getId(),
                 category.getName(),
                 category.getDescription()
         );

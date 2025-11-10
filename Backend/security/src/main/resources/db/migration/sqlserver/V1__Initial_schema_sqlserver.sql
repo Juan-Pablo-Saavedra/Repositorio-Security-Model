@@ -2,40 +2,47 @@
 -- Version: 1.0.0
 
 -- Categories table
-CREATE TABLE categories (
+CREATE TABLE category (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL UNIQUE,
     description NVARCHAR(MAX)
 );
 
 -- Suppliers table
-CREATE TABLE suppliers (
+CREATE TABLE supplier (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     name NVARCHAR(100) NOT NULL UNIQUE,
-    contact_email NVARCHAR(100) NOT NULL UNIQUE,
+    contact_email NVARCHAR(100),
     contact_phone NVARCHAR(20),
     address NVARCHAR(MAX)
 );
 
 -- Products table
-CREATE TABLE products (
+CREATE TABLE product (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     name NVARCHAR(255) NOT NULL,
     description NVARCHAR(MAX),
     price DECIMAL(10,2) NOT NULL,
-    sku NVARCHAR(50) NOT NULL UNIQUE,
-    category_id BIGINT,
-    FOREIGN KEY (category_id) REFERENCES categories(id)
+    sku NVARCHAR(50) NOT NULL UNIQUE
+);
+
+-- Product-Category relationship table
+CREATE TABLE product_category (
+    product_id BIGINT NOT NULL,
+    category_id BIGINT NOT NULL,
+    PRIMARY KEY (product_id, category_id),
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE
 );
 
 -- Supplier-Product relationship table
-CREATE TABLE supplier_products (
-    id BIGINT IDENTITY(1,1) PRIMARY KEY,
+CREATE TABLE supplier_product (
     supplier_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
-    FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
-    CONSTRAINT unique_supplier_product UNIQUE (supplier_id, product_id)
+    supply_price DECIMAL(10,2),
+    PRIMARY KEY (supplier_id, product_id),
+    FOREIGN KEY (supplier_id) REFERENCES supplier(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
 );
 
 -- Clients table
@@ -58,7 +65,7 @@ CREATE TABLE orders (
 );
 
 -- Users table
-CREATE TABLE user_table (
+CREATE TABLE users (
     id BIGINT IDENTITY(1,1) PRIMARY KEY,
     username NVARCHAR(50) NOT NULL UNIQUE,
     email NVARCHAR(100) NOT NULL UNIQUE,
@@ -70,11 +77,10 @@ CREATE TABLE user_table (
 );
 
 -- Indexes for better performance
-CREATE INDEX idx_products_category ON products(category_id);
-CREATE INDEX idx_products_sku ON products(sku);
+CREATE INDEX idx_product_sku ON product(sku);
 CREATE INDEX idx_orders_client ON orders(client_id);
 CREATE INDEX idx_orders_status ON orders(status);
 CREATE INDEX idx_orders_date ON orders(order_date);
 CREATE INDEX idx_clients_email ON clients(email);
-CREATE INDEX idx_user_username ON user_table(username);
-CREATE INDEX idx_user_email ON user_table(email);
+CREATE INDEX idx_user_username ON users(username);
+CREATE INDEX idx_user_email ON users(email);

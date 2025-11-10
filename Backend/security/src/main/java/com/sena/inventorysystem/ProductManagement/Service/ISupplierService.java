@@ -9,7 +9,11 @@ public interface ISupplierService {
 
     SupplierDto create(Supplier supplier);
 
+    SupplierDto createSupplier(SupplierDto supplierDto);
+
     SupplierDto update(Long id, Supplier supplier);
+
+    SupplierDto updateSupplier(Long id, SupplierDto supplierDto);
 
     void delete(Long id);
 

@@ -3,6 +3,7 @@ package com.sena.inventorysystem.OrderManagement.Controller;
 import com.sena.inventorysystem.OrderManagement.DTO.ClientDto;
 import com.sena.inventorysystem.OrderManagement.Entity.Client;
 import com.sena.inventorysystem.OrderManagement.Service.IClientService;
+import com.sena.inventorysystem.Infrastructure.DTO.ApiResponse;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,38 +21,81 @@ public class ClientController {
     private IClientService clientService;
 
     @PostMapping
-    public ResponseEntity<ClientDto> create(@Valid @RequestBody Client client) {
-        ClientDto createdClient = clientService.create(client);
-        return new ResponseEntity<>(createdClient, HttpStatus.CREATED);
+    public ResponseEntity<?> createClient(@Valid @RequestBody ClientDto clientDto) {
+        try {
+            Client client = new Client();
+            client.setName(clientDto.getName());
+            client.setEmail(clientDto.getEmail());
+            client.setPhone(clientDto.getPhone());
+            client.setAddress(clientDto.getAddress());
+
+            ClientDto createdClient = clientService.create(client);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse(true, "Cliente creado exitosamente", createdClient));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Error al crear el cliente: " + e.getMessage(), null));
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientDto> update(@PathVariable Long id, @Valid @RequestBody Client client) {
-        ClientDto updatedClient = clientService.update(id, client);
-        return new ResponseEntity<>(updatedClient, HttpStatus.OK);
+    public ResponseEntity<?> updateClient(@PathVariable Long id, @Valid @RequestBody ClientDto clientDto) {
+        try {
+            Client client = new Client();
+            client.setName(clientDto.getName());
+            client.setEmail(clientDto.getEmail());
+            client.setPhone(clientDto.getPhone());
+            client.setAddress(clientDto.getAddress());
+
+            ClientDto updatedClient = clientService.update(id, client);
+            return ResponseEntity.ok(new ApiResponse(true, "Cliente actualizado exitosamente", updatedClient));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Error al actualizar el cliente: " + e.getMessage(), null));
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        clientService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> deleteClient(@PathVariable Long id) {
+        try {
+            clientService.delete(id);
+            return ResponseEntity.ok(new ApiResponse(true, "Cliente eliminado exitosamente", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Error al eliminar el cliente: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientDto> findById(@PathVariable Long id) {
-        ClientDto client = clientService.findById(id);
-        return new ResponseEntity<>(client, HttpStatus.OK);
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        try {
+            ClientDto client = clientService.findById(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Cliente encontrado", client));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Cliente no encontrado: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<ClientDto>> findAll() {
-        List<ClientDto> clients = clientService.findAll();
-        return new ResponseEntity<>(clients, HttpStatus.OK);
+    public ResponseEntity<?> findAll() {
+        try {
+            List<ClientDto> clients = clientService.findAll();
+            return ResponseEntity.ok(new ApiResponse<>(true, "Clientes obtenidos exitosamente", clients));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error al obtener clientes: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<ClientDto> findByEmail(@PathVariable String email) {
-        ClientDto client = clientService.findByEmail(email);
-        return new ResponseEntity<>(client, HttpStatus.OK);
+    public ResponseEntity<?> findByEmail(@PathVariable String email) {
+        try {
+            ClientDto client = clientService.findByEmail(email);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Cliente encontrado", client));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Cliente no encontrado: " + e.getMessage(), null));
+        }
     }
 }

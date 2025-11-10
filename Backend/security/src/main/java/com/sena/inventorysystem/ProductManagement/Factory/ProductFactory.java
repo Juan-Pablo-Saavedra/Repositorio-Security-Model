@@ -22,7 +22,6 @@ public class ProductFactory {
 
     public static ProductDto createDtoFromProduct(Product product) {
         return new ProductDto(
-                product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),

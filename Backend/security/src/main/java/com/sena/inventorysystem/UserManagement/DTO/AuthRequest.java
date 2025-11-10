@@ -1,13 +1,17 @@
 package com.sena.inventorysystem.UserManagement.DTO;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
+@Schema(description = "Solicitud de autenticación")
 public class AuthRequest {
 
-    @NotBlank(message = "Username is required")
+    @Schema(description = "Nombre de usuario", example = "johndoe", required = true)
+    @NotBlank(message = "El nombre de usuario es obligatorio")
     private String username;
 
-    @NotBlank(message = "Password is required")
+    @Schema(description = "Contraseña del usuario", example = "password123", required = true)
+    @NotBlank(message = "La contraseña es obligatoria")
     private String password;
 
     // Constructors

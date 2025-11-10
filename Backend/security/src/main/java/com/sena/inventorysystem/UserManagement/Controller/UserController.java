@@ -8,6 +8,7 @@ import com.sena.inventorysystem.UserManagement.Service.IUserService;
 import com.sena.inventorysystem.UserManagement.Repository.UserRepository;
 import com.sena.inventorysystem.Infrastructure.config.JwtUtil;
 import com.sena.inventorysystem.Infrastructure.exceptions.NotFoundException;
+import com.sena.inventorysystem.Infrastructure.DTO.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,13 +38,19 @@ public class UserController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@Valid @RequestBody User user) {
-        UserDto createdUser = userService.create(user);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto userDto) {
+        try {
+            UserDto createdUser = userService.createUser(userDto);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ApiResponse(true, "Usuario registrado exitosamente", createdUser));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Error al registrar el usuario: " + e.getMessage(), null));
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -68,60 +75,112 @@ public class UserController {
                     user.getLastName()
                 );
 
-                return new ResponseEntity<>(authResponse, HttpStatus.OK);
+                return ResponseEntity.ok(new ApiResponse(true, "Login exitoso", authResponse));
             } else {
                 throw new BadCredentialsException("Credenciales inválidas");
             }
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Credenciales inválidas");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse(false, "Credenciales inválidas", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(false, "Error en el login: " + e.getMessage(), null));
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> update(@PathVariable Long id, @Valid @RequestBody User user) {
-        UserDto updatedUser = userService.update(id, user);
-        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @Valid @RequestBody UserDto userDto) {
+        try {
+            User user = new User();
+            user.setUsername(userDto.getUsername());
+            user.setEmail(userDto.getEmail());
+            user.setFirstName(userDto.getFirstName());
+            user.setLastName(userDto.getLastName());
+            user.setPhone(userDto.getPhone());
+            user.setAddress(userDto.getAddress());
+
+            UserDto updatedUser = userService.update(id, user);
+            return ResponseEntity.ok(new ApiResponse(true, "Usuario actualizado exitosamente", updatedUser));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Error al actualizar el usuario: " + e.getMessage(), null));
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        userService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try {
+            userService.delete(id);
+            return ResponseEntity.ok(new ApiResponse(true, "Usuario eliminado exitosamente", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(false, "Error al eliminar el usuario: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> findById(@PathVariable Long id) {
-        UserDto user = userService.findById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        try {
+            UserDto user = userService.findById(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Usuario encontrado", user));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Usuario no encontrado: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> findAll() {
-        List<UserDto> users = userService.findAll();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    public ResponseEntity<?> findAll() {
+        try {
+            List<UserDto> users = userService.findAll();
+            return ResponseEntity.ok(new ApiResponse<>(true, "Usuarios obtenidos exitosamente", users));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error al obtener usuarios: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/username/{username}")
-    public ResponseEntity<UserDto> findByUsername(@PathVariable String username) {
-        UserDto user = userService.findByUsername(username);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<?> findByUsername(@PathVariable String username) {
+        try {
+            UserDto user = userService.findByUsername(username);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Usuario encontrado", user));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Usuario no encontrado: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<UserDto> findByEmail(@PathVariable String email) {
-        UserDto user = userService.findByEmail(email);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<?> findByEmail(@PathVariable String email) {
+        try {
+            UserDto user = userService.findByEmail(email);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Usuario encontrado", user));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Usuario no encontrado: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/check-username/{username}")
-    public ResponseEntity<Boolean> existsByUsername(@PathVariable String username) {
-        boolean exists = userService.existsByUsername(username);
-        return new ResponseEntity<>(exists, HttpStatus.OK);
+    public ResponseEntity<?> existsByUsername(@PathVariable String username) {
+        try {
+            boolean exists = userService.existsByUsername(username);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Verificación completada", exists));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error al verificar usuario: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/check-email/{email}")
-    public ResponseEntity<Boolean> existsByEmail(@PathVariable String email) {
-        boolean exists = userService.existsByEmail(email);
-        return new ResponseEntity<>(exists, HttpStatus.OK);
+    public ResponseEntity<?> existsByEmail(@PathVariable String email) {
+        try {
+            boolean exists = userService.existsByEmail(email);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Verificación completada", exists));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse<>(false, "Error al verificar email: " + e.getMessage(), null));
+        }
     }
 }

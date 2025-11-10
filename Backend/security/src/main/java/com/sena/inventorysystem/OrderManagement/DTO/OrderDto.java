@@ -1,22 +1,36 @@
 package com.sena.inventorysystem.OrderManagement.DTO;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Schema(description = "DTO para la creación y actualización de órdenes")
 public class OrderDto {
 
-    private Long id;
+    @Schema(description = "ID del cliente que realiza la orden", example = "1", required = true)
+    @NotNull(message = "El ID del cliente es obligatorio")
     private Long clientId;
+
+    @Schema(description = "Nombre del cliente (solo lectura)", example = "Juan Pérez", accessMode = Schema.AccessMode.READ_ONLY)
     private String clientName;
+
+    @Schema(description = "Fecha de la orden (solo lectura)", example = "2023-12-01T10:00:00", accessMode = Schema.AccessMode.READ_ONLY)
     private LocalDateTime orderDate;
+
+    @Schema(description = "Total de la orden", example = "150.50", required = true)
+    @NotNull(message = "El total es obligatorio")
+    @DecimalMin(value = "0.0", inclusive = false, message = "El total debe ser mayor a cero")
     private BigDecimal total;
-    private String status;
+
+    @Schema(description = "Estado de la orden", example = "PENDING", allowableValues = {"PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"}, defaultValue = "PENDING")
+    private String status = "PENDING";
 
     // Constructors
     public OrderDto() {}
 
-    public OrderDto(Long id, Long clientId, String clientName, LocalDateTime orderDate, BigDecimal total, String status) {
-        this.id = id;
+    public OrderDto(Long clientId, String clientName, LocalDateTime orderDate, BigDecimal total, String status) {
         this.clientId = clientId;
         this.clientName = clientName;
         this.orderDate = orderDate;
@@ -25,9 +39,6 @@ public class OrderDto {
     }
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
     public Long getClientId() { return clientId; }
     public void setClientId(Long clientId) { this.clientId = clientId; }
 

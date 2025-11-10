@@ -49,6 +49,35 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public ProductDto createProduct(ProductDto productDto) {
+        Product product = new Product();
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+        product.setSku(productDto.getSku());
+
+        return create(product);
+    }
+
+    @Override
+    public ProductDto updateProduct(Long id, ProductDto productDto) {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Producto no encontrado con id: " + id));
+
+        if (!existingProduct.getSku().equals(productDto.getSku()) && productRepository.existsBySku(productDto.getSku())) {
+            throw new ValidationException("Producto con SKU " + productDto.getSku() + " ya existe");
+        }
+
+        existingProduct.setName(productDto.getName());
+        existingProduct.setDescription(productDto.getDescription());
+        existingProduct.setPrice(productDto.getPrice());
+        existingProduct.setSku(productDto.getSku());
+
+        Product updatedProduct = productRepository.save(existingProduct);
+        return convertToDto(updatedProduct);
+    }
+
+    @Override
     public void delete(Long id) {
         if (!productRepository.existsById(id)) {
             throw new NotFoundException("Producto no encontrado con id: " + id);
@@ -98,7 +127,6 @@ public class ProductService implements IProductService {
 
     private ProductDto convertToDto(Product product) {
         return new ProductDto(
-                product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),

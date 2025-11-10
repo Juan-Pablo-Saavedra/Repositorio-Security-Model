@@ -1,18 +1,34 @@
 package com.sena.inventorysystem.ProductManagement.DTO;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+@Schema(description = "DTO para la creación y actualización de proveedores")
 public class SupplierDto {
 
-    private Long id;
+    @Schema(description = "Nombre del proveedor", example = "TechCorp S.A.", required = true)
+    @NotBlank(message = "El nombre del proveedor es obligatorio")
+    @Size(max = 100, message = "El nombre no debe exceder 100 caracteres")
     private String name;
+
+    @Schema(description = "Correo electrónico de contacto del proveedor", example = "contacto@techcorp.com", required = true)
+    @NotBlank(message = "El correo electrónico de contacto es obligatorio")
+    @Email(message = "El correo electrónico debe ser válido")
     private String contactEmail;
+
+    @Schema(description = "Número de teléfono de contacto del proveedor", example = "+1234567890", required = false)
+    @Size(max = 20, message = "El teléfono no debe exceder 20 caracteres")
     private String contactPhone;
+
+    @Schema(description = "Dirección del proveedor", example = "Av. Principal 123, Ciudad, País", required = false)
     private String address;
 
     // Constructors
     public SupplierDto() {}
 
-    public SupplierDto(Long id, String name, String contactEmail, String contactPhone, String address) {
-        this.id = id;
+    public SupplierDto(String name, String contactEmail, String contactPhone, String address) {
         this.name = name;
         this.contactEmail = contactEmail;
         this.contactPhone = contactPhone;
@@ -20,9 +36,6 @@ public class SupplierDto {
     }
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 

@@ -62,6 +62,20 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public UserDto createUser(UserDto userDto) {
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        user.setEmail(userDto.getEmail());
+        user.setPassword(userDto.getPassword());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setPhone(userDto.getPhone());
+        user.setAddress(userDto.getAddress());
+
+        return create(user);
+    }
+
+    @Override
     public void delete(Long id) {
         if (!userRepository.existsById(id)) {
             throw new NotFoundException("Usuario no encontrado con id: " + id);
@@ -115,9 +129,9 @@ public class UserService implements IUserService {
 
     private UserDto convertToDto(User user) {
         return new UserDto(
-                user.getId(),
                 user.getUsername(),
                 user.getEmail(),
+                null, // No devolver contraseña por seguridad
                 user.getFirstName(),
                 user.getLastName(),
                 user.getPhone(),
