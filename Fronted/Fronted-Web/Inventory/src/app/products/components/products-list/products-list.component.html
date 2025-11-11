@@ -1,0 +1,108 @@
+<div class="products-container">
+  <div class="header-section">
+    <h2>Gestión de Productos</h2>
+    <button class="btn-primary" (click)="onCreateProduct()">
+      <i class="material-icons">add</i>
+      Nuevo Producto
+    </button>
+  </div>
+  
+  <div class="search-section">
+    <div class="search-field">
+      <i class="material-icons">search</i>
+      <input 
+        type="text" 
+        placeholder="Buscar productos..." 
+        [(ngModel)]="searchTerm" 
+        (ngModelChange)="onSearch()">
+    </div>
+    
+    <div class="filter-buttons">
+      <button
+        class="filter-btn"
+        [class.active]="currentFilter === 'all'"
+        (click)="onFilter('all')">
+        Todos
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="currentFilter === 'active'"
+        (click)="onFilter('active')">
+        Activos
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="currentFilter === 'inactive'"
+        (click)="onFilter('inactive')">
+        Inactivos
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="currentFilter === 'low-stock'"
+        (click)="onFilter('low-stock')">
+        Stock Bajo
+      </button>
+    </div>
+  </div>
+  
+  <div class="table-container">
+    <table class="products-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>SKU</th>
+          <th>Precio</th>
+          <th>Estado</th>
+          <th>Fecha Creación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of filteredProducts">
+          <td>{{ product.id }}</td>
+          <td>{{ product.name }}</td>
+          <td class="description-cell">{{ product.description }}</td>
+          <td class="sku-cell">{{ product.sku }}</td>
+          <td class="price-cell">${{ product.price }}</td>
+          <td>
+            <span class="status-badge" [class]="product.isActive ? 'active' : 'inactive'">
+              {{ product.isActive ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td>{{ product.createdAt | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon btn-edit" (click)="onEdit(product.id)" title="Editar">
+                <i class="material-icons">edit</i>
+              </button>
+              <button class="btn-icon btn-toggle" (click)="onToggleStatus(product.id)" title="Activar/Desactivar">
+                <i class="material-icons">{{ product.isActive ? 'visibility_off' : 'visibility' }}</i>
+              </button>
+              <button class="btn-icon btn-delete" (click)="onDelete(product.id)" title="Eliminar">
+                <i class="material-icons">delete</i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button 
+      class="page-btn" 
+      [disabled]="currentPage === 1"
+      (click)="onPageChange(currentPage - 1)">
+      <i class="material-icons">chevron_left</i>
+    </button>
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <button 
+      class="page-btn" 
+      [disabled]="currentPage === totalPages"
+      (click)="onPageChange(currentPage + 1)">
+      <i class="material-icons">chevron_right</i>
+    </button>
+  </div>
+</div>

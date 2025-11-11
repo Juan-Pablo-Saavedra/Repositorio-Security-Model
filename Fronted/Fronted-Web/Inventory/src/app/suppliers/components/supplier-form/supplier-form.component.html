@@ -1,0 +1,188 @@
+<div class="supplier-form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Editar Proveedor' : 'Nuevo Proveedor' }}</h2>
+    <button class="btn-back" (click)="onCancel()">
+      <i class="material-icons">arrow_back</i>
+      Volver a Proveedores
+    </button>
+  </div>
+
+  <form class="supplier-form" (submit)="onSubmit($event)">
+    <div class="form-grid">
+      <div class="form-section basic-info">
+        <h3>Información Básica</h3>
+
+        <div class="form-group">
+          <label for="name">Nombre del Proveedor *</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="form-control"
+            placeholder="Ej: TechCorp Supplies"
+            [(ngModel)]="formData.name"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="contacto@proveedor.com"
+            [(ngModel)]="formData.email"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Teléfono *</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            class="form-control"
+            placeholder="+57 300 123 4567"
+            [(ngModel)]="formData.phone"
+            required>
+        </div>
+      </div>
+
+      <div class="form-section location">
+        <h3>Ubicación</h3>
+
+        <div class="form-group">
+          <label for="address">Dirección *</label>
+          <textarea
+            id="address"
+            name="address"
+            class="form-control"
+            rows="3"
+            placeholder="Dirección completa del proveedor"
+            [(ngModel)]="formData.address"
+            required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="city">Ciudad</label>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            class="form-control"
+            placeholder="Ciudad"
+            [(ngModel)]="formData.city">
+        </div>
+
+        <div class="form-group">
+          <label for="country">País</label>
+          <input
+            type="text"
+            id="country"
+            name="country"
+            class="form-control"
+            placeholder="País"
+            [(ngModel)]="formData.country">
+        </div>
+      </div>
+
+      <div class="form-section contact">
+        <h3>Contacto Adicional</h3>
+
+        <div class="form-group">
+          <label for="contactPerson">Persona de Contacto</label>
+          <input
+            type="text"
+            id="contactPerson"
+            name="contactPerson"
+            class="form-control"
+            placeholder="Nombre del contacto principal"
+            [(ngModel)]="formData.contactPerson">
+        </div>
+
+        <div class="form-group">
+          <label for="contactPhone">Teléfono de Contacto</label>
+          <input
+            type="tel"
+            id="contactPhone"
+            name="contactPhone"
+            class="form-control"
+            placeholder="Teléfono de la persona de contacto"
+            [(ngModel)]="formData.contactPhone">
+        </div>
+
+        <div class="form-group">
+          <label for="website">Sitio Web</label>
+          <input
+            type="url"
+            id="website"
+            name="website"
+            class="form-control"
+            placeholder="https://www.proveedor.com"
+            [(ngModel)]="formData.website">
+        </div>
+      </div>
+
+      <div class="form-section status">
+        <h3>Estado</h3>
+
+        <div class="form-group">
+          <label for="isActive">Estado del Proveedor</label>
+          <select
+            id="isActive"
+            name="isActive"
+            class="form-control"
+            [(ngModel)]="formData.isActive">
+            <option [value]="true">Activo</option>
+            <option [value]="false">Inactivo</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="category">Categoría</label>
+          <select
+            id="category"
+            name="category"
+            class="form-control"
+            [(ngModel)]="formData.category">
+            <option value="">Seleccionar categoría</option>
+            <option value="Electrónicos">Electrónicos</option>
+            <option value="Ropa">Ropa</option>
+            <option value="Hogar">Hogar</option>
+            <option value="Deportes">Deportes</option>
+            <option value="Industrial">Industrial</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="paymentTerms">Términos de Pago</label>
+          <select
+            id="paymentTerms"
+            name="paymentTerms"
+            class="form-control"
+            [(ngModel)]="formData.paymentTerms">
+            <option value="immediate">Inmediato</option>
+            <option value="15days">15 días</option>
+            <option value="30days">30 días</option>
+            <option value="45days">45 días</option>
+            <option value="60days">60 días</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="onCancel()">
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="!isFormValid() || isLoading">
+        <i class="material-icons" *ngIf="isLoading">hourglass_empty</i>
+        {{ isEditMode ? 'Actualizar' : 'Crear' }} Proveedor
+      </button>
+    </div>
+  </form>
+</div>

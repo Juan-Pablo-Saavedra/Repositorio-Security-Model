@@ -13,16 +13,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
 import { AuthRoutingModule } from './auth-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
-  declarations: [
-    LoginComponent,
-    RegisterComponent
-  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -30,7 +24,7 @@ import { SharedModule } from '../shared/shared.module';
     RouterModule,
     AuthRoutingModule,
     SharedModule,
-    
+
     // Angular Material Modules
     MatIconModule,
     MatButtonModule,
@@ -40,10 +34,6 @@ import { SharedModule } from '../shared/shared.module';
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatDividerModule
-  ],
-  exports: [
-    LoginComponent,
-    RegisterComponent
   ]
 })
 export class AuthModule { }

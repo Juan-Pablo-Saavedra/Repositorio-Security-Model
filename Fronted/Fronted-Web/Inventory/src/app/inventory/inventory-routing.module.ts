@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { InventoryListComponent } from './components/inventory-list.component';
-import { InventoryFormComponent } from './components/inventory-form.component';
 
 const routes: Routes = [
   {
@@ -11,15 +9,15 @@ const routes: Routes = [
   },
   {
     path: 'list',
-    component: InventoryListComponent
+    loadComponent: () => import('./components/inventory-list/inventory-list.component').then(m => m.InventoryListComponent)
   },
   {
     path: 'add',
-    component: InventoryFormComponent
+    loadComponent: () => import('./components/inventory-form/inventory-form.component').then(m => m.InventoryFormComponent)
   },
   {
     path: 'edit/:id',
-    component: InventoryFormComponent
+    loadComponent: () => import('./components/inventory-form/inventory-form.component').then(m => m.InventoryFormComponent)
   }
 ];
 

@@ -1,0 +1,216 @@
+<div class="inventory-form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
+    <button class="btn-back" (click)="onCancel()">
+      <i class="material-icons">arrow_back</i>
+      Volver al Inventario
+    </button>
+  </div>
+
+  <form class="inventory-form" (submit)="onSubmit($event)">
+    <div class="form-grid">
+      <div class="form-section basic-info">
+        <h3>Información Básica</h3>
+
+        <div class="form-group">
+          <label for="name">Nombre del Producto *</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="form-control"
+            placeholder="Ej: iPhone 15 Pro"
+            [(ngModel)]="formData.name"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea
+            id="description"
+            name="description"
+            class="form-control"
+            rows="3"
+            placeholder="Descripción detallada del producto"
+            [(ngModel)]="formData.description"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="sku">Código SKU *</label>
+            <input
+              type="text"
+              id="sku"
+              name="sku"
+              class="form-control"
+              placeholder="Ej: IPH15PRO-001"
+              [(ngModel)]="formData.sku"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="category">Categoría *</label>
+            <select
+              id="category"
+              name="category"
+              class="form-control"
+              [(ngModel)]="formData.category"
+              required>
+              <option value="">Seleccionar categoría</option>
+              <option value="Electrónicos">Electrónicos</option>
+              <option value="Ropa">Ropa</option>
+              <option value="Hogar">Hogar</option>
+              <option value="Deportes">Deportes</option>
+              <option value="Libros">Libros</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section pricing">
+        <h3>Precios</h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="price">Precio de Venta *</label>
+            <div class="input-group">
+              <span class="input-prefix">$</span>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                class="form-control"
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                [(ngModel)]="formData.price"
+                required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cost">Costo de Adquisición</label>
+            <div class="input-group">
+              <span class="input-prefix">$</span>
+              <input
+                type="number"
+                id="cost"
+                name="cost"
+                class="form-control"
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                [(ngModel)]="formData.cost">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section inventory">
+        <h3>Inventario</h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="stock">Stock Actual *</label>
+            <input
+              type="number"
+              id="stock"
+              name="stock"
+              class="form-control"
+              placeholder="0"
+              min="0"
+              [(ngModel)]="formData.stock"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="minStock">Stock Mínimo *</label>
+            <input
+              type="number"
+              id="minStock"
+              name="minStock"
+              class="form-control"
+              placeholder="10"
+              min="0"
+              [(ngModel)]="formData.minStock"
+              required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="supplier">Proveedor</label>
+          <select
+            id="supplier"
+            name="supplier"
+            class="form-control"
+            [(ngModel)]="formData.supplier">
+            <option value="">Seleccionar proveedor</option>
+            <option value="1">TechCorp Suppliers</option>
+            <option value="2">Global Electronics</option>
+            <option value="3">Local Distributors</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="location">Ubicación en Almacén</label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            class="form-control"
+            placeholder="Ej: Aisle 3, Section B"
+            [(ngModel)]="formData.location">
+        </div>
+      </div>
+
+      <div class="form-section additional">
+        <h3>Información Adicional</h3>
+
+        <div class="form-group">
+          <label for="status">Estado del Producto</label>
+          <select
+            id="status"
+            name="status"
+            class="form-control"
+            [(ngModel)]="formData.status">
+            <option value="AVAILABLE">Disponible</option>
+            <option value="LOW">Stock Bajo</option>
+            <option value="OUT">Agotado</option>
+            <option value="DISCONTINUED">Descontinuado</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Notas Internas</label>
+          <textarea
+            id="notes"
+            name="notes"
+            class="form-control"
+            rows="2"
+            placeholder="Notas para uso interno del equipo..."
+            [(ngModel)]="formData.notes"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="onCancel()">
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn-outline"
+        (click)="onSaveDraft()"
+        [disabled]="isLoading">
+        Guardar como Borrador
+      </button>
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="!isFormValid() || isLoading">
+        <i class="material-icons" *ngIf="isLoading">hourglass_empty</i>
+        {{ isEditMode ? 'Actualizar' : 'Crear' }} Producto
+      </button>
+    </div>
+  </form>
+</div>

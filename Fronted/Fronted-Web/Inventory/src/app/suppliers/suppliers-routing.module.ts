@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SuppliersListComponent } from './components/suppliers-list.component';
-import { SupplierFormComponent } from './components/supplier-form.component';
 
 const routes: Routes = [
   {
@@ -11,15 +9,15 @@ const routes: Routes = [
   },
   {
     path: 'list',
-    component: SuppliersListComponent
+    loadComponent: () => import('./components/suppliers-list/suppliers-list.component').then(m => m.SuppliersListComponent)
   },
   {
     path: 'create',
-    component: SupplierFormComponent
+    loadComponent: () => import('./components/supplier-form/supplier-form.component').then(m => m.SupplierFormComponent)
   },
   {
     path: 'edit/:id',
-    component: SupplierFormComponent
+    loadComponent: () => import('./components/supplier-form/supplier-form.component').then(m => m.SupplierFormComponent)
   }
 ];
 

@@ -1,0 +1,151 @@
+<div class="product-form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Editar Producto' : 'Nuevo Producto' }}</h2>
+    <button class="btn-back" (click)="onCancel()">
+      <i class="material-icons">arrow_back</i>
+      Volver a Productos
+    </button>
+  </div>
+  
+  <form class="product-form" (submit)="onSubmit($event)">
+    <div class="form-grid">
+      <div class="form-section basic-info">
+        <h3>Información Básica</h3>
+        
+        <div class="form-group">
+          <label for="name">Nombre del Producto *</label>
+          <input 
+            type="text" 
+            id="name"
+            name="name"
+            class="form-control"
+            placeholder="Ej: iPhone 15 Pro"
+            [(ngModel)]="formData.name"
+            required>
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea 
+            id="description"
+            name="description"
+            class="form-control"
+            rows="4"
+            placeholder="Descripción detallada del producto"
+            [(ngModel)]="formData.description"></textarea>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="sku">Código SKU *</label>
+            <input 
+              type="text" 
+              id="sku"
+              name="sku"
+              class="form-control"
+              placeholder="Ej: IPH15PRO-001"
+              [(ngModel)]="formData.sku"
+              required>
+          </div>
+          
+          <div class="form-group">
+            <label for="category">Categoría *</label>
+            <select 
+              id="category"
+              name="category"
+              class="form-control"
+              [(ngModel)]="formData.category"
+              required>
+              <option value="">Seleccionar categoría</option>
+              <option value="Electrónicos">Electrónicos</option>
+              <option value="Ropa">Ropa</option>
+              <option value="Hogar">Hogar</option>
+              <option value="Deportes">Deportes</option>
+              <option value="Libros">Libros</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section pricing">
+        <h3>Precios</h3>
+        
+        <div class="form-group">
+          <label for="price">Precio de Venta *</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input 
+              type="number" 
+              id="price"
+              name="price"
+              class="form-control"
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              [(ngModel)]="formData.price"
+              required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="cost">Costo de Adquisición</label>
+          <div class="input-group">
+            <span class="input-prefix">$</span>
+            <input 
+              type="number" 
+              id="cost"
+              name="cost"
+              class="form-control"
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              [(ngModel)]="formData.cost">
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-section status">
+        <h3>Estado</h3>
+        
+        <div class="form-group">
+          <label for="isActive">Estado del Producto</label>
+          <select 
+            id="isActive"
+            name="isActive"
+            class="form-control"
+            [(ngModel)]="formData.isActive">
+            <option [value]="true">Activo</option>
+            <option [value]="false">Inactivo</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="supplier">Proveedor</label>
+          <select 
+            id="supplier"
+            name="supplier"
+            class="form-control"
+            [(ngModel)]="formData.supplier">
+            <option value="">Seleccionar proveedor</option>
+            <option value="1">TechCorp Suppliers</option>
+            <option value="2">Global Electronics</option>
+            <option value="3">Local Distributors</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="onCancel()">
+        Cancelar
+      </button>
+      <button 
+        type="submit" 
+        class="btn-primary"
+        [disabled]="!isFormValid() || isLoading">
+        <i class="material-icons" *ngIf="isLoading">hourglass_empty</i>
+        {{ isEditMode ? 'Actualizar' : 'Crear' }} Producto
+      </button>
+    </div>
+  </form>
+</div>

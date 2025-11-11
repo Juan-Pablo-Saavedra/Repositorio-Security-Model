@@ -1,0 +1,103 @@
+<div class="categories-container">
+  <div class="header-section">
+    <h2>Gestión de Categorías</h2>
+    <button class="btn-primary" (click)="onCreateCategory()">
+      <i class="material-icons">add</i>
+      Nueva Categoría
+    </button>
+  </div>
+  
+  <div class="search-section">
+    <div class="search-field">
+      <i class="material-icons">search</i>
+      <input 
+        type="text" 
+        placeholder="Buscar categorías..." 
+        [(ngModel)]="searchTerm" 
+        (ngModelChange)="onSearch()">
+    </div>
+    
+    <div class="stats-cards">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="material-icons">category</i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ categories.length }}</h3>
+          <p>Total Categorías</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="material-icons">inventory</i>
+        </div>
+        <div class="stat-content">
+          <h3>{{ getTotalProducts() }}</h3>
+          <p>Productos Totales</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="table-container">
+    <table class="categories-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Productos</th>
+          <th>Estado</th>
+          <th>Fecha Creación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let category of filteredCategories">
+          <td>{{ category.id }}</td>
+          <td>{{ category.name }}</td>
+          <td class="description-cell">{{ category.description }}</td>
+          <td>
+            <span class="product-count">{{ category.productCount }}</span>
+          </td>
+          <td>
+            <span class="status-badge" [class]="category.isActive ? 'active' : 'inactive'">
+              {{ category.isActive ? 'Activa' : 'Inactiva' }}
+            </span>
+          </td>
+          <td>{{ formatDate(category.createdAt) }}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon btn-edit" (click)="onEdit(category.id)" title="Editar">
+                <i class="material-icons">edit</i>
+              </button>
+              <button class="btn-icon btn-toggle" (click)="onToggleStatus(category.id)" title="Activar/Desactivar">
+                <i class="material-icons">{{ category.isActive ? 'visibility_off' : 'visibility' }}</i>
+              </button>
+              <button class="btn-icon btn-delete" (click)="onDelete(category.id)" title="Eliminar">
+                <i class="material-icons">delete</i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button 
+      class="page-btn" 
+      [disabled]="currentPage === 1"
+      (click)="onPageChange(currentPage - 1)">
+      <i class="material-icons">chevron_left</i>
+    </button>
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <button 
+      class="page-btn" 
+      [disabled]="currentPage === totalPages"
+      (click)="onPageChange(currentPage + 1)">
+      <i class="material-icons">chevron_right</i>
+    </button>
+  </div>
+</div>

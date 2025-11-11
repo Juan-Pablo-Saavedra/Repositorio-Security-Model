@@ -1,0 +1,101 @@
+<div class="category-form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Editar Categoría' : 'Nueva Categoría' }}</h2>
+    <button class="btn-back" (click)="onCancel()">
+      <i class="material-icons">arrow_back</i>
+      Volver a Categorías
+    </button>
+  </div>
+  
+  <form class="category-form" (submit)="onSubmit($event)">
+    <div class="form-grid">
+      <div class="form-section basic-info">
+        <h3>Información Básica</h3>
+        
+        <div class="form-group">
+          <label for="name">Nombre de la Categoría *</label>
+          <input 
+            type="text" 
+            id="name"
+            name="name"
+            class="form-control"
+            placeholder="Ej: Electrónicos"
+            [(ngModel)]="formData.name"
+            required>
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea 
+            id="description"
+            name="description"
+            class="form-control"
+            rows="4"
+            placeholder="Descripción detallada de la categoría"
+            [(ngModel)]="formData.description"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="icon">Icono</label>
+          <input 
+            type="text" 
+            id="icon"
+            name="icon"
+            class="form-control"
+            placeholder="Ej: laptop, phone, home"
+            [(ngModel)]="formData.icon">
+        </div>
+      </div>
+      
+      <div class="form-section status">
+        <h3>Configuración</h3>
+        
+        <div class="form-group">
+          <label for="isActive">Estado</label>
+          <select 
+            id="isActive"
+            name="isActive"
+            class="form-control"
+            [(ngModel)]="formData.isActive">
+            <option [value]="true">Activa</option>
+            <option [value]="false">Inactiva</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="color">Color</label>
+          <input 
+            type="color" 
+            id="color"
+            name="color"
+            class="form-control"
+            [(ngModel)]="formData.color">
+        </div>
+        
+        <div class="form-group">
+          <label for="sortOrder">Orden de Mostrar</label>
+          <input 
+            type="number" 
+            id="sortOrder"
+            name="sortOrder"
+            class="form-control"
+            placeholder="1"
+            [(ngModel)]="formData.sortOrder">
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="onCancel()">
+        Cancelar
+      </button>
+      <button 
+        type="submit" 
+        class="btn-primary"
+        [disabled]="!isFormValid() || isLoading">
+        <i class="material-icons" *ngIf="isLoading">hourglass_empty</i>
+        {{ isEditMode ? 'Actualizar' : 'Crear' }} Categoría
+      </button>
+    </div>
+  </form>
+</div>

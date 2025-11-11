@@ -1,22 +1,13 @@
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-
 import { ProductsRoutingModule } from './products-routing.module';
-import { ProductsListComponent } from './components/products-list.component';
-import { ProductFormComponent } from './components/product-form.component';
+
+// Módulo refactorizado para usar componentes standalone con lazy loading
 
 @NgModule({
-  declarations: [
-    ProductsListComponent,
-    ProductFormComponent
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    ProductsRoutingModule
-  ]
+  imports: [CommonModule, FormsModule, RouterModule, ProductsRoutingModule],
+  exports: [RouterModule]
 })
 export class ProductsModule { }

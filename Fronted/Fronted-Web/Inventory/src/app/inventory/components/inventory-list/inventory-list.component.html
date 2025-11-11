@@ -1,0 +1,139 @@
+<div class="inventory-container">
+  <div class="header-section">
+    <h2>Gestión de Inventario</h2>
+    <button class="btn-primary" (click)="onAddItem()">
+      <i class="material-icons">add</i>
+      Agregar Producto
+    </button>
+  </div>
+
+  <div class="stats-cards">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="material-icons">inventory_2</i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ totalProducts }}</h3>
+        <p>Total Productos</p>
+      </div>
+    </div>
+
+    <div class="stat-card low-stock">
+      <div class="stat-icon">
+        <i class="material-icons">warning</i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ lowStockCount }}</h3>
+        <p>Stock Bajo</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="material-icons">attach_money</i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ totalValue | currency }}</h3>
+        <p>Valor Total</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-section">
+    <div class="search-field">
+      <i class="material-icons">search</i>
+      <input type="text" placeholder="Buscar productos..." [(ngModel)]="searchTerm" (ngModelChange)="onSearch()">
+    </div>
+
+    <div class="filter-buttons">
+      <button
+        class="filter-btn"
+        [class.active]="currentFilter === 'all'"
+        (click)="onFilter('all')">
+        Todos
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="currentFilter === 'low'"
+        (click)="onFilter('low')">
+        Stock Bajo
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="currentFilter === 'normal'"
+        (click)="onFilter('normal')">
+        Stock Normal
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="inventory-table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Categoría</th>
+          <th>SKU</th>
+          <th>Stock</th>
+          <th>Precio</th>
+          <th>Valor Total</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredInventory">
+          <td>
+            <div class="product-info">
+              <div class="product-name">{{ item.name }}</div>
+              <div class="product-description">{{ item.description }}</div>
+            </div>
+          </td>
+          <td>{{ item.category }}</td>
+          <td class="sku-cell">{{ item.sku }}</td>
+          <td>
+            <span class="stock-badge" [class.low-stock]="item.stock <= item.minStock">
+              {{ item.stock }}
+            </span>
+          </td>
+          <td>{{ item.price | currency }}</td>
+          <td>{{ (item.price * item.stock) | currency }}</td>
+          <td>
+            <span class="status-badge" [class]="item.status.toLowerCase()">
+              {{ getStatusText(item.status) }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon btn-edit" (click)="onEdit(item.id)" title="Editar">
+                <i class="material-icons">edit</i>
+              </button>
+              <button class="btn-icon btn-view" (click)="onView(item.id)" title="Ver detalles">
+                <i class="material-icons">visibility</i>
+              </button>
+              <button class="btn-icon btn-delete" (click)="onDelete(item.id)" title="Eliminar">
+                <i class="material-icons">delete</i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button
+      class="page-btn"
+      [disabled]="currentPage === 1"
+      (click)="onPageChange(currentPage - 1)">
+      <i class="material-icons">chevron_left</i>
+    </button>
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <button
+      class="page-btn"
+      [disabled]="currentPage === totalPages"
+      (click)="onPageChange(currentPage + 1)">
+      <i class="material-icons">chevron_right</i>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,179 @@
+<div class="register-page">
+  <div class="register-container animate-fade-in">
+    <div class="register-card animate-scale-in">
+      <!-- Header con Logo -->
+      <div class="register-header">
+        <div class="logo-wrapper">
+          <svg class="register-logo" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="64" height="64" rx="16" fill="url(#logo-gradient)"/>
+            <path d="M32 16L16 24V40L32 48L48 40V24L32 16Z" fill="white" opacity="0.9"/>
+            <path d="M32 24L24 28V36L32 40L40 36V28L32 24Z" fill="white"/>
+            <defs>
+              <linearGradient id="logo-gradient" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ff6b35"/>
+                <stop offset="1" stop-color="#f7b731"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h1 class="app-title">InventarioPro</h1>
+        <p class="app-subtitle">Crear nueva cuenta</p>
+      </div>
+
+      <!-- Formulario de Registro -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+        <div class="form-section">
+          <h2 class="form-title">Registro de usuario</h2>
+          <p class="form-description">Completa los datos para crear tu cuenta</p>
+
+          <div class="form-row animate-slide-in-left" style="animation-delay: 0.1s;">
+            <div class="form-group">
+              <label for="firstName" class="form-label">
+                Nombre
+              </label>
+              <input
+                type="text"
+                id="firstName"
+                formControlName="firstName"
+                class="form-control"
+                placeholder="Tu nombre"
+                [class.error]="isFieldInvalid('firstName')"
+              />
+              <div class="error-message" *ngIf="isFieldInvalid('firstName')">
+                El nombre es requerido
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="lastName" class="form-label">
+                Apellido
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                formControlName="lastName"
+                class="form-control"
+                placeholder="Tu apellido"
+                [class.error]="isFieldInvalid('lastName')"
+              />
+              <div class="error-message" *ngIf="isFieldInvalid('lastName')">
+                El apellido es requerido
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group animate-slide-in-left" style="animation-delay: 0.2s;">
+            <label for="email" class="form-label">
+              Correo electrónico
+            </label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-control"
+              placeholder="tu@email.com"
+              [class.error]="isFieldInvalid('email')"
+            />
+            <div class="error-message" *ngIf="isFieldInvalid('email')">
+              Ingresa un email válido
+            </div>
+          </div>
+
+          <div class="form-group animate-slide-in-left" style="animation-delay: 0.3s;">
+            <label for="username" class="form-label">
+              Usuario
+            </label>
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              class="form-control"
+              placeholder="nombre_usuario"
+              [class.error]="isFieldInvalid('username')"
+            />
+            <div class="error-message" *ngIf="isFieldInvalid('username')">
+              El usuario es requerido
+            </div>
+          </div>
+
+          <div class="form-group animate-slide-in-left" style="animation-delay: 0.4s;">
+            <label for="password" class="form-label">
+              Contraseña
+            </label>
+            <div class="input-wrapper">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="password"
+                formControlName="password"
+                class="form-control"
+                placeholder="Mínimo 6 caracteres"
+                [class.error]="isFieldInvalid('password')"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="togglePasswordVisibility()">
+                {{ showPassword ? '👁️' : '🔒' }}
+              </button>
+            </div>
+            <div class="error-message" *ngIf="isFieldInvalid('password')">
+              La contraseña debe tener al menos 6 caracteres
+            </div>
+          </div>
+
+          <div class="form-group animate-slide-in-left" style="animation-delay: 0.5s;">
+            <label for="confirmPassword" class="form-label">
+              Confirmar contraseña
+            </label>
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              class="form-control"
+              placeholder="Repite tu contraseña"
+              [class.error]="isFieldInvalid('confirmPassword')"
+            />
+            <div class="error-message" *ngIf="isFieldInvalid('confirmPassword')">
+              Las contraseñas no coinciden
+            </div>
+          </div>
+
+          <div class="form-options animate-slide-in-left" style="animation-delay: 0.6s;">
+            <label class="checkbox-wrapper">
+              <input type="checkbox" class="checkbox" formControlName="terms" />
+              <span class="checkbox-label">
+                Acepto los <a href="#" class="terms-link">términos y condiciones</a>
+              </span>
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            class="register-button animate-slide-in-left"
+            [disabled]="registerForm.invalid || isLoading"
+            style="animation-delay: 0.7s;">
+            <span class="button-content">
+              <span *ngIf="!isLoading">Crear cuenta</span>
+              <span *ngIf="isLoading">Creando cuenta...</span>
+            </span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Footer -->
+      <div class="register-footer animate-fade-in" style="animation-delay: 0.8s;">
+        <p class="footer-text">
+          ¿Ya tienes una cuenta?
+          <a [routerLink]="['/auth/login']" class="login-link">Inicia sesión</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decoraciones de fondo -->
+  <div class="background-decoration">
+    <div class="floating-element element-1"></div>
+    <div class="floating-element element-2"></div>
+    <div class="floating-element element-3"></div>
+  </div>
+</div>

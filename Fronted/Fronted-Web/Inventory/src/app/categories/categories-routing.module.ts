@@ -9,15 +9,15 @@ const routes: Routes = [
   },
   {
     path: 'list',
-    loadComponent: () => import('./components/categories-list.component').then(m => m.CategoriesListComponent)
+    loadComponent: () => import('./components/categories-list/categories-list.component').then(m => m.CategoriesListComponent)
   },
   {
     path: 'create',
-    loadComponent: () => import('./components/category-form.component').then(m => m.CategoryFormComponent)
+    loadComponent: () => import('./components/category-form/category-form.component').then(m => m.CategoryFormComponent)
   },
   {
     path: 'edit/:id',
-    loadComponent: () => import('./components/category-form.component').then(m => m.CategoryFormComponent)
+    loadComponent: () => import('./components/category-form/category-form.component').then(m => m.CategoryFormComponent)
   }
 ];
 

@@ -1,0 +1,102 @@
+<div class="suppliers-container">
+  <div class="header-section">
+    <h2>Gestión de Proveedores</h2>
+    <button class="btn-primary" (click)="onCreateSupplier()">
+      <i class="material-icons">add</i>
+      Nuevo Proveedor
+    </button>
+  </div>
+
+  <div class="search-section">
+    <div class="search-field">
+      <i class="material-icons">search</i>
+      <input
+        type="text"
+        placeholder="Buscar proveedores..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearch()">
+    </div>
+
+    <div class="filter-buttons">
+      <button
+        class="filter-btn"
+        [class.active]="currentFilter === 'all'"
+        (click)="onFilter('all')">
+        Todos
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="currentFilter === 'active'"
+        (click)="onFilter('active')">
+        Activos
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="currentFilter === 'inactive'"
+        (click)="onFilter('inactive')">
+        Inactivos
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="suppliers-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Dirección</th>
+          <th>Estado</th>
+          <th>Fecha Registro</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let supplier of filteredSuppliers">
+          <td>{{ supplier.id }}</td>
+          <td>{{ supplier.name }}</td>
+          <td>{{ supplier.email }}</td>
+          <td>{{ supplier.phone }}</td>
+          <td class="address-cell">{{ supplier.address }}</td>
+          <td>
+            <span class="status-badge" [class]="supplier.isActive ? 'active' : 'inactive'">
+              {{ supplier.isActive ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td>{{ supplier.createdAt | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon btn-edit" (click)="onEdit(supplier.id)" title="Editar">
+                <i class="material-icons">edit</i>
+              </button>
+              <button class="btn-icon btn-toggle" (click)="onToggleStatus(supplier.id)" title="Activar/Desactivar">
+                <i class="material-icons">{{ supplier.isActive ? 'visibility_off' : 'visibility' }}</i>
+              </button>
+              <button class="btn-icon btn-delete" (click)="onDelete(supplier.id)" title="Eliminar">
+                <i class="material-icons">delete</i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button
+      class="page-btn"
+      [disabled]="currentPage === 1"
+      (click)="onPageChange(currentPage - 1)">
+      <i class="material-icons">chevron_left</i>
+    </button>
+    <span>Página {{ currentPage }} de {{ totalPages }}</span>
+    <button
+      class="page-btn"
+      [disabled]="currentPage === totalPages"
+      (click)="onPageChange(currentPage + 1)">
+      <i class="material-icons">chevron_right</i>
+    </button>
+  </div>
+</div>

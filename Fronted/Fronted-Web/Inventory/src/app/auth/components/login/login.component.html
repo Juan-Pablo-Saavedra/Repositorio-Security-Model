@@ -1,0 +1,111 @@
+<div class="login-page">
+  <div class="login-container animate-fade-in">
+    <div class="login-card animate-scale-in">
+      <!-- Header con Logo -->
+      <div class="login-header">
+        <div class="logo-wrapper">
+          <svg class="login-logo" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="64" height="64" rx="16" fill="url(#logo-gradient)"/>
+            <path d="M32 16L16 24V40L32 48L48 40V24L32 16Z" fill="white" opacity="0.9"/>
+            <path d="M32 24L24 28V36L32 40L40 36V28L32 24Z" fill="white"/>
+            <defs>
+              <linearGradient id="logo-gradient" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ff6b35"/>
+                <stop offset="1" stop-color="#f7b731"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h1 class="app-title">InventarioPro</h1>
+        <p class="app-subtitle">Sistema de Gestión de Inventarios</p>
+      </div>
+
+      <!-- Formulario de Login -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-section">
+          <h2 class="form-title">Bienvenido de vuelta</h2>
+          <p class="form-description">Inicia sesión en tu cuenta para continuar</p>
+
+          <div class="form-group animate-slide-in-left" style="animation-delay: 0.1s;">
+            <label for="username" class="form-label">
+              <span class="form-icon">👤</span>
+              Usuario
+            </label>
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              class="form-input"
+              placeholder="Ingresa tu usuario"
+              [class.error]="isFieldInvalid('username')"
+            />
+            <div class="error-message" *ngIf="isFieldInvalid('username')">
+              El usuario es requerido
+            </div>
+          </div>
+
+          <div class="form-group animate-slide-in-left" style="animation-delay: 0.2s;">
+            <label for="password" class="form-label">
+              <span class="form-icon">🔒</span>
+              Contraseña
+            </label>
+            <div class="input-wrapper">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                id="password"
+                formControlName="password"
+                class="form-input"
+                placeholder="Ingresa tu contraseña"
+                [class.error]="isFieldInvalid('password')"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="togglePasswordVisibility()"
+                [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                <span class="toggle-icon">{{ showPassword ? '👁️' : '🔒' }}</span>
+              </button>
+            </div>
+            <div class="error-message" *ngIf="isFieldInvalid('password')">
+              La contraseña es requerida
+            </div>
+          </div>
+
+          <div class="form-options animate-slide-in-left" style="animation-delay: 0.3s;">
+            <label class="checkbox-wrapper">
+              <input type="checkbox" class="checkbox" formControlName="rememberMe" />
+              <span class="checkbox-label">Recordarme</span>
+            </label>
+            <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <button
+            type="submit"
+            class="login-button animate-slide-in-left"
+            [disabled]="loginForm.invalid || isLoading"
+            style="animation-delay: 0.4s;">
+            <span class="button-content">
+              <span class="button-icon">{{ isLoading ? '⏳' : '🔐' }}</span>
+              <span>{{ isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}</span>
+            </span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Footer -->
+      <div class="login-footer animate-fade-in" style="animation-delay: 0.5s;">
+        <p class="footer-text">
+          ¿No tienes una cuenta?
+          <a [routerLink]="['/auth/register']" class="signup-link">Regístrate aquí</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decoraciones de fondo -->
+  <div class="background-decoration">
+    <div class="floating-element element-1"></div>
+    <div class="floating-element element-2"></div>
+    <div class="floating-element element-3"></div>
+  </div>
+</div>
