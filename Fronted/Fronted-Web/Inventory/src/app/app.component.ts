@@ -1,19 +1,8 @@
 import { Component, OnInit, ViewChild, HostListener, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet, Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { AuthService } from './shared/services/auth.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDividerModule } from '@angular/material/divider';
-import { FormsModule } from '@angular/forms';
-import { Observable, Subject, combineLatest, map, shareReplay, filter, takeUntil } from 'rxjs';
+import { Observable, Subject, map, shareReplay, filter, takeUntil } from 'rxjs';
 
 interface MenuItem {
   id: string;
@@ -38,22 +27,6 @@ interface Breadcrumb {
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    RouterLink,
-    FormsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    MatSidenavModule,
-    MatListModule,
-    MatBadgeModule,
-    MatTooltipModule,
-    MatDividerModule
-  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -75,25 +48,25 @@ export class AppComponent implements OnInit, OnDestroy {
       id: 1, 
       type: 'warning', 
       message: 'Stock bajo: Producto XYZ tiene solo 5 unidades disponibles', 
-      time: new Date(Date.now() - 1000 * 60 * 15) // Hace 15 minutos
+      time: new Date(Date.now() - 1000 * 60 * 15)
     },
     { 
       id: 2, 
       type: 'info', 
       message: 'Nueva orden de compra #ORD-2024-001 recibida correctamente', 
-      time: new Date(Date.now() - 1000 * 60 * 30) // Hace 30 minutos
+      time: new Date(Date.now() - 1000 * 60 * 30)
     },
     { 
       id: 3, 
       type: 'success', 
       message: 'Inventario actualizado: Se agregaron 100 unidades de Producto ABC', 
-      time: new Date(Date.now() - 1000 * 60 * 60) // Hace 1 hora
+      time: new Date(Date.now() - 1000 * 60 * 60)
     },
     { 
       id: 4, 
       type: 'error', 
       message: 'Alerta: Producto DEF ha alcanzado el stock mínimo crítico', 
-      time: new Date(Date.now() - 1000 * 60 * 90) // Hace 1.5 horas
+      time: new Date(Date.now() - 1000 * 60 * 90)
     }
   ];
 
@@ -142,14 +115,13 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   ];
 
-  @ViewChild('sidenav') sidenav!: MatSidenav;
+  @ViewChild('sidenav') sidenav: any;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private breakpointObserver: BreakpointObserver
   ) {
-    // Observables para responsive design
     this.isHandset$ = this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.Tablet])
       .pipe(
         map(result => result.matches),
@@ -171,9 +143,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  /**
-   * Inicializa la autenticación y redirige si es necesario
-   */
   private initializeAuth(): void {
     this.authService.isAuthenticated$
       .pipe(takeUntil(this.destroy$))
@@ -191,24 +160,17 @@ export class AppComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Inicializa el tema desde localStorage
-   */
   private initializeTheme(): void {
     const savedTheme = localStorage.getItem('inventario_theme');
     if (savedTheme) {
       this.isDarkTheme = savedTheme === 'dark';
     } else {
-      // Detectar preferencia del sistema
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       this.isDarkTheme = prefersDark;
     }
     this.applyTheme();
   }
 
-  /**
-   * Inicializa eventos del router para actualizar breadcrumbs
-   */
   private initializeRouterEvents(): void {
     this.router.events
       .pipe(
@@ -217,7 +179,6 @@ export class AppComponent implements OnInit, OnDestroy {
       )
       .subscribe((event: any) => {
         this.updateBreadcrumbs(event.url);
-        // Cerrar sidebar en móvil después de navegar
         this.isHandset$.pipe(takeUntil(this.destroy$)).subscribe(isHandset => {
           if (isHandset && this.sidenav) {
             this.sidenav.close();
@@ -226,9 +187,6 @@ export class AppComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Actualiza breadcrumbs basado en la URL actual
-   */
   private updateBreadcrumbs(url: string): void {
     const segments = url.split('/').filter(segment => segment);
     this.breadcrumbs = [{ label: 'Dashboard', route: '/dashboard' }];
@@ -254,34 +212,22 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Actualiza el contador de notificaciones
-   */
   private updateNotificationCount(): void {
     this.notificationCount = this.notifications.length;
   }
 
-  /**
-   * Toggle del sidebar
-   */
   toggleSidebar(): void {
     if (this.sidenav) {
       this.sidenav.toggle();
     }
   }
 
-  /**
-   * Toggle del tema claro/oscuro
-   */
   toggleTheme(): void {
     this.isDarkTheme = !this.isDarkTheme;
     this.applyTheme();
     localStorage.setItem('inventario_theme', this.isDarkTheme ? 'dark' : 'light');
   }
 
-  /**
-   * Aplica el tema al documento
-   */
   private applyTheme(): void {
     const root = document.documentElement;
     if (this.isDarkTheme) {
@@ -291,9 +237,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Realiza búsqueda de productos
-   */
   performSearch(): void {
     if (this.searchQuery.trim()) {
       this.router.navigate(['/inventory'], { 
@@ -303,9 +246,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Obtiene el icono apropiado para cada tipo de notificación
-   */
   getNotificationIcon(type: string): string {
     const icons: { [key: string]: string } = {
       'success': 'check_circle',
@@ -316,48 +256,30 @@ export class AppComponent implements OnInit, OnDestroy {
     return icons[type] || 'notifications';
   }
 
-  /**
-   * Limpia todas las notificaciones
-   */
   clearAllNotifications(): void {
     this.notifications = [];
     this.notificationCount = 0;
   }
 
-  /**
-   * Elimina una notificación específica
-   */
   removeNotification(id: number): void {
     this.notifications = this.notifications.filter(n => n.id !== id);
     this.updateNotificationCount();
   }
 
-  /**
-   * Cierra sesión
-   */
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
   }
 
-  /**
-   * Maneja el redimensionamiento de la ventana
-   */
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
     // El BreakpointObserver maneja esto automáticamente
   }
 
-  /**
-   * Navega al perfil del usuario
-   */
   navigateToProfile(): void {
     this.router.navigate(['/profile']);
   }
 
-  /**
-   * Navega a configuración
-   */
   navigateToSettings(): void {
     this.router.navigate(['/settings']);
   }

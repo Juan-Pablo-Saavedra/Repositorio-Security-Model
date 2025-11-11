@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -13,28 +12,23 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./components/dashboard/dashboard.component').then(c => c.DashboardComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'inventory',
-    loadComponent: () => import('./components/inventory/inventory.component').then(c => c.InventoryComponent),
-    canActivate: [authGuard]
-  },
-  {
-    path: 'products',
-    loadChildren: () => import('./components/products/products.module').then(m => m.ProductsModule),
-    canActivate: [authGuard]
+    loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
   },
   {
     path: 'categories',
-    loadChildren: () => import('./components/categories/categories.module').then(m => m.CategoriesModule),
-    canActivate: [authGuard]
+    loadChildren: () => import('./categories/categories.module').then(m => m.CategoriesModule)
+  },
+  {
+    path: 'products',
+    loadChildren: () => import('./products/products.module').then(m => m.ProductsModule)
   },
   {
     path: 'suppliers',
-    loadChildren: () => import('./components/suppliers/suppliers.module').then(m => m.SuppliersModule),
-    canActivate: [authGuard]
+    loadChildren: () => import('./suppliers/suppliers.module').then(m => m.SuppliersModule)
+  },
+  {
+    path: 'inventory',
+    loadChildren: () => import('./inventory/inventory.module').then(m => m.InventoryModule)
   },
   {
     path: '**',

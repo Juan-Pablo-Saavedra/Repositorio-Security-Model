@@ -1,37 +1,25 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
-import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
-export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
 
-  // Solo agregar token a requests que no sean de autenticación
-  if (!isAuthRequest(req.url)) {
-    const token = authService.getToken();
+  constructor(private authService: AuthService) {}
+
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // Agregar token de autorización si existe
+    const token = this.authService.getToken();
+    
     if (token) {
-      req = req.clone({
+      request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${token}`
+          'Authorization': `Bearer ${token}`
         }
       });
     }
+    
+    return next.handle(request);
   }
-
-  return next(req).pipe(
-    catchError((error) => {
-      if (error.status === 401) {
-        // Token expirado o inválido
-        authService.logout();
-        router.navigate(['/auth/login']);
-      }
-      return throwError(() => error);
-    })
-  );
-};
-
-function isAuthRequest(url: string): boolean {
-  return url.includes('/users/login') || url.includes('/users/register');
 }
