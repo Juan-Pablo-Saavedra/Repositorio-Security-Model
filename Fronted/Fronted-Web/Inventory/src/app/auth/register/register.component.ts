@@ -3,15 +3,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   template: `
-    <div class="login-page">
-      <div class="login-container animate-fade-in">
-        <div class="login-card animate-scale-in">
+    <div class="register-page">
+      <div class="register-container animate-fade-in">
+        <div class="register-card animate-scale-in">
           <!-- Header con Logo -->
-          <div class="login-header">
+          <div class="register-header">
             <div class="logo-wrapper">
-              <svg class="login-logo" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg class="register-logo" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="64" height="64" rx="16" fill="url(#logo-gradient)"/>
                 <path d="M32 16L16 24V40L32 48L48 40V24L32 16Z" fill="white" opacity="0.9"/>
                 <path d="M32 24L24 28V36L32 40L40 36V28L32 24Z" fill="white"/>
@@ -24,18 +24,70 @@ import { Router } from '@angular/router';
               </svg>
             </div>
             <h1 class="app-title">InventarioPro</h1>
-            <p class="app-subtitle">Sistema de Gestión de Inventarios</p>
+            <p class="app-subtitle">Crear nueva cuenta</p>
           </div>
 
-          <!-- Formulario de Login -->
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+          <!-- Formulario de Registro -->
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
             <div class="form-section">
-              <h2 class="form-title">Bienvenido de vuelta</h2>
-              <p class="form-description">Inicia sesión en tu cuenta para continuar</p>
+              <h2 class="form-title">Registro de usuario</h2>
+              <p class="form-description">Completa los datos para crear tu cuenta</p>
 
-              <div class="form-group animate-slide-in-left" style="animation-delay: 0.1s;">
+              <div class="form-row animate-slide-in-left" style="animation-delay: 0.1s;">
+                <div class="form-group">
+                  <label for="firstName" class="form-label">
+                    Nombre
+                  </label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    formControlName="firstName"
+                    class="form-input"
+                    placeholder="Tu nombre"
+                    [class.error]="isFieldInvalid('firstName')"
+                  />
+                  <div class="error-message" *ngIf="isFieldInvalid('firstName')">
+                    El nombre es requerido
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="lastName" class="form-label">
+                    Apellido
+                  </label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    formControlName="lastName"
+                    class="form-input"
+                    placeholder="Tu apellido"
+                    [class.error]="isFieldInvalid('lastName')"
+                  />
+                  <div class="error-message" *ngIf="isFieldInvalid('lastName')">
+                    El apellido es requerido
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group animate-slide-in-left" style="animation-delay: 0.2s;">
+                <label for="email" class="form-label">
+                  Correo electrónico
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  formControlName="email"
+                  class="form-input"
+                  placeholder="tu@email.com"
+                  [class.error]="isFieldInvalid('email')"
+                />
+                <div class="error-message" *ngIf="isFieldInvalid('email')">
+                  Ingresa un email válido
+                </div>
+              </div>
+
+              <div class="form-group animate-slide-in-left" style="animation-delay: 0.3s;">
                 <label for="username" class="form-label">
-                  <span class="form-icon">👤</span>
                   Usuario
                 </label>
                 <input
@@ -43,7 +95,7 @@ import { Router } from '@angular/router';
                   id="username"
                   formControlName="username"
                   class="form-input"
-                  placeholder="Ingresa tu usuario"
+                  placeholder="nombre_usuario"
                   [class.error]="isFieldInvalid('username')"
                 />
                 <div class="error-message" *ngIf="isFieldInvalid('username')">
@@ -51,9 +103,8 @@ import { Router } from '@angular/router';
                 </div>
               </div>
 
-              <div class="form-group animate-slide-in-left" style="animation-delay: 0.2s;">
+              <div class="form-group animate-slide-in-left" style="animation-delay: 0.4s;">
                 <label for="password" class="form-label">
-                  <span class="form-icon">🔒</span>
                   Contraseña
                 </label>
                 <div class="input-wrapper">
@@ -62,48 +113,65 @@ import { Router } from '@angular/router';
                     id="password"
                     formControlName="password"
                     class="form-input"
-                    placeholder="Ingresa tu contraseña"
+                    placeholder="Mínimo 6 caracteres"
                     [class.error]="isFieldInvalid('password')"
                   />
                   <button 
                     type="button" 
                     class="password-toggle"
-                    (click)="togglePasswordVisibility()"
-                    [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'">
-                    <span class="toggle-icon">{{ showPassword ? '👁️' : '🔒' }}</span>
+                    (click)="togglePasswordVisibility()">
+                    {{ showPassword ? '👁️' : '🔒' }}
                   </button>
                 </div>
                 <div class="error-message" *ngIf="isFieldInvalid('password')">
-                  La contraseña es requerida
+                  La contraseña debe tener al menos 6 caracteres
                 </div>
               </div>
 
-              <div class="form-options animate-slide-in-left" style="animation-delay: 0.3s;">
-                <label class="checkbox-wrapper">
-                  <input type="checkbox" class="checkbox" formControlName="rememberMe" />
-                  <span class="checkbox-label">Recordarme</span>
+              <div class="form-group animate-slide-in-left" style="animation-delay: 0.5s;">
+                <label for="confirmPassword" class="form-label">
+                  Confirmar contraseña
                 </label>
-                <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                <input
+                  [type]="showConfirmPassword ? 'text' : 'password'"
+                  id="confirmPassword"
+                  formControlName="confirmPassword"
+                  class="form-input"
+                  placeholder="Repite tu contraseña"
+                  [class.error]="isFieldInvalid('confirmPassword')"
+                />
+                <div class="error-message" *ngIf="isFieldInvalid('confirmPassword')">
+                  Las contraseñas no coinciden
+                </div>
+              </div>
+
+              <div class="form-options animate-slide-in-left" style="animation-delay: 0.6s;">
+                <label class="checkbox-wrapper">
+                  <input type="checkbox" class="checkbox" formControlName="terms" />
+                  <span class="checkbox-label">
+                    Acepto los <a href="#" class="terms-link">términos y condiciones</a>
+                  </span>
+                </label>
               </div>
 
               <button 
                 type="submit" 
-                class="login-button animate-slide-in-left" 
-                [disabled]="loginForm.invalid || isLoading"
-                style="animation-delay: 0.4s;">
+                class="register-button animate-slide-in-left" 
+                [disabled]="registerForm.invalid || isLoading"
+                style="animation-delay: 0.7s;">
                 <span class="button-content">
-                  <span class="button-icon">{{ isLoading ? '⏳' : '🔐' }}</span>
-                  <span>{{ isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}</span>
+                  <span *ngIf="!isLoading">Crear cuenta</span>
+                  <span *ngIf="isLoading">Creando cuenta...</span>
                 </span>
               </button>
             </div>
           </form>
 
           <!-- Footer -->
-          <div class="login-footer animate-fade-in" style="animation-delay: 0.5s;">
+          <div class="register-footer animate-fade-in" style="animation-delay: 0.8s;">
             <p class="footer-text">
-              ¿No tienes una cuenta? 
-              <a [routerLink]="['/auth/register']" class="signup-link">Regístrate aquí</a>
+              ¿Ya tienes una cuenta? 
+              <a [routerLink]="['/auth/login']" class="login-link">Inicia sesión</a>
             </p>
           </div>
         </div>
@@ -118,8 +186,8 @@ import { Router } from '@angular/router';
     </div>
   `,
   styles: [`
-    /* Estilos base de la página */
-    .login-page {
+    /* Estilos base de la página - Mismos que login */
+    .register-page {
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -128,6 +196,7 @@ import { Router } from '@angular/router';
       position: relative;
       overflow: hidden;
       font-family: var(--font-family-primary);
+      padding: var(--spacing-lg);
     }
 
     .background-decoration {
@@ -179,17 +248,16 @@ import { Router } from '@angular/router';
       50% { transform: translateY(-20px) rotate(180deg); }
     }
 
-    /* Contenedor principal del login */
-    .login-container {
+    /* Contenedor principal del registro */
+    .register-container {
       width: 100%;
       max-width: 480px;
-      padding: var(--spacing-lg);
       z-index: 1;
       position: relative;
     }
 
-    /* Card del login */
-    .login-card {
+    /* Card del registro */
+    .register-card {
       background: var(--surface-primary);
       border-radius: var(--radius-2xl);
       box-shadow: var(--shadow-2xl);
@@ -198,7 +266,7 @@ import { Router } from '@angular/router';
       position: relative;
     }
 
-    .login-card::before {
+    .register-card::before {
       content: '';
       position: absolute;
       top: 0;
@@ -208,8 +276,8 @@ import { Router } from '@angular/router';
       background: var(--bg-gradient-primary);
     }
 
-    /* Header del login */
-    .login-header {
+    /* Header del registro */
+    .register-header {
       text-align: center;
       padding: var(--spacing-2xl) var(--spacing-xl) var(--spacing-xl);
       background: var(--surface-secondary);
@@ -221,7 +289,7 @@ import { Router } from '@angular/router';
       justify-content: center;
     }
 
-    .login-logo {
+    .register-logo {
       filter: drop-shadow(0 4px 8px rgba(255, 107, 53, 0.3));
       animation: pulse 3s ease-in-out infinite;
     }
@@ -245,7 +313,7 @@ import { Router } from '@angular/router';
     }
 
     /* Formulario */
-    .login-form {
+    .register-form {
       padding: var(--spacing-2xl);
     }
 
@@ -270,6 +338,12 @@ import { Router } from '@angular/router';
       text-align: center;
     }
 
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-md);
+    }
+
     .form-group {
       display: flex;
       flex-direction: column;
@@ -277,22 +351,11 @@ import { Router } from '@angular/router';
     }
 
     .form-label {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
+      display: block;
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-medium);
       color: var(--text-secondary);
       margin-bottom: var(--spacing-sm);
-    }
-
-    .form-icon {
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .input-wrapper {
@@ -339,9 +402,7 @@ import { Router } from '@angular/router';
       padding: var(--spacing-xs);
       border-radius: var(--radius-sm);
       transition: all var(--transition-fast);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 16px;
     }
 
     .password-toggle:hover {
@@ -349,31 +410,21 @@ import { Router } from '@angular/router';
       background: var(--surface-hover);
     }
 
-    .toggle-icon {
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
-    }
-
     .error-message {
       font-size: var(--font-size-xs);
       color: var(--error);
       margin-top: var(--spacing-xs);
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-xs);
     }
 
     .form-options {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       margin-top: var(--spacing-sm);
     }
 
     .checkbox-wrapper {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: var(--spacing-sm);
       cursor: pointer;
     }
@@ -382,28 +433,26 @@ import { Router } from '@angular/router';
       width: 18px;
       height: 18px;
       accent-color: var(--primary-orange);
+      margin-top: 2px;
     }
 
     .checkbox-label {
       font-size: var(--font-size-sm);
       color: var(--text-secondary);
+      line-height: 1.4;
     }
 
-    .forgot-password {
-      font-size: var(--font-size-sm);
+    .terms-link {
       color: var(--text-accent);
       text-decoration: none;
-      font-weight: var(--font-weight-medium);
-      transition: color var(--transition-fast);
     }
 
-    .forgot-password:hover {
-      color: var(--primary-orange-dark);
+    .terms-link:hover {
       text-decoration: underline;
     }
 
-    /* Botón de login */
-    .login-button {
+    /* Botón de registro */
+    .register-button {
       background: var(--bg-gradient-primary);
       color: var(--text-inverse);
       border: none;
@@ -419,16 +468,16 @@ import { Router } from '@angular/router';
       margin-top: var(--spacing-sm);
     }
 
-    .login-button:hover:not(:disabled) {
+    .register-button:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: var(--shadow-lg);
     }
 
-    .login-button:active {
+    .register-button:active {
       transform: translateY(0);
     }
 
-    .login-button:disabled {
+    .register-button:disabled {
       opacity: 0.7;
       cursor: not-allowed;
       transform: none;
@@ -438,23 +487,10 @@ import { Router } from '@angular/router';
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: var(--spacing-sm);
-    }
-
-    .button-icon {
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
     }
 
     /* Footer */
-    .login-footer {
+    .register-footer {
       text-align: center;
       padding: var(--spacing-lg) var(--spacing-xl);
       background: var(--surface-secondary);
@@ -467,57 +503,37 @@ import { Router } from '@angular/router';
       margin: 0;
     }
 
-    .signup-link {
+    .login-link {
       color: var(--text-accent);
       text-decoration: none;
       font-weight: var(--font-weight-semibold);
-      transition: color var(--transition-fast);
     }
 
-    .signup-link:hover {
-      color: var(--primary-orange-dark);
+    .login-link:hover {
       text-decoration: underline;
     }
 
     /* Responsive */
     @media (max-width: 768px) {
-      .login-container {
+      .register-page {
         padding: var(--spacing-md);
-        max-width: 100%;
       }
 
-      .login-header {
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+      }
+
+      .register-header {
         padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
       }
 
-      .login-form {
+      .register-form {
         padding: var(--spacing-xl);
       }
 
       .app-title {
         font-size: var(--font-size-2xl);
-      }
-
-      .form-options {
-        flex-direction: column;
-        gap: var(--spacing-md);
-        align-items: flex-start;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .login-container {
-        padding: var(--spacing-sm);
-      }
-
-      .login-header,
-      .login-form,
-      .login-footer {
-        padding: var(--spacing-lg);
-      }
-
-      .app-title {
-        font-size: var(--font-size-xl);
       }
     }
 
@@ -578,10 +594,11 @@ import { Router } from '@angular/router';
     }
   `]
 })
-export class LoginComponent implements OnInit {
-  loginForm!: FormGroup;
+export class RegisterComponent implements OnInit {
+  registerForm!: FormGroup;
   isLoading = false;
   showPassword = false;
+  showConfirmPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -589,31 +606,54 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loginForm = this.fb.group({
+    this.registerForm = this.fb.group({
+      firstName: ['', [Validators.required, Validators.minLength(2)]],
+      lastName: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      rememberMe: [false]
-    });
+      confirmPassword: ['', [Validators.required]],
+      terms: [false, [Validators.requiredTrue]]
+    }, { validators: this.passwordMatchValidator });
   }
 
   isFieldInvalid(fieldName: string): boolean {
-    const field = this.loginForm.get(fieldName);
+    const field = this.registerForm.get(fieldName);
     return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password');
+    const confirmPassword = form.get('confirmPassword');
+    
+    if (password && confirmPassword && password.value !== confirmPassword.value) {
+      confirmPassword.setErrors({ passwordMismatch: true });
+    } else if (confirmPassword?.errors?.['passwordMismatch']) {
+      delete confirmPassword.errors['passwordMismatch'];
+      if (Object.keys(confirmPassword.errors).length === 0) {
+        confirmPassword.setErrors(null);
+      }
+    }
+    return null;
   }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
   onSubmit(): void {
-    if (this.loginForm.valid && !this.isLoading) {
+    if (this.registerForm.valid && !this.isLoading) {
       this.isLoading = true;
       
-      // TODO: Implementar autenticación con servicio
+      // TODO: Implementar registro con servicio
       setTimeout(() => {
         this.isLoading = false;
-        // Redireccionar después de login exitoso
-        this.router.navigate(['/dashboard']);
+        // Redireccionar después de registro exitoso
+        this.router.navigate(['/auth/login']);
       }, 2000);
     }
   }
